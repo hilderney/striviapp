@@ -1,0 +1,34 @@
+appId: com.zapfcoorp.striviapp
+productName: Striviapp
+artifactName: Striviapp-Setup-${version}.${ext}
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - desktop/**/*
+  - src/**/*
+  - public/**/*
+  - package.json
+  - "!**/*.test.js"
+  - "!tests/**/*"
+  - "!license-server/**/*"
+
+asar: true
+asarUnpack:
+  - "**/*.node"
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  deleteAppDataOnUninstall: false

@@ -1,0 +1,2806 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "F2-01",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-02",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-03",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-04",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-05",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-06",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-07",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-08",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-09",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-10",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/sqlitePersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-11",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/memoryPersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-12",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/memoryPersistenceAdapter.test.js"
+    },
+    {
+      "id": "F2-13",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/cryptoAdapter.test.js"
+    },
+    {
+      "id": "F2-14",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/cryptoAdapter.test.js"
+    },
+    {
+      "id": "F2-15",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/cryptoAdapter.test.js"
+    },
+    {
+      "id": "F2-16",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/ollamaAdapter.test.js"
+    },
+    {
+      "id": "F2-17",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/ollamaAdapter.test.js"
+    },
+    {
+      "id": "F2-18",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/ollamaAdapter.test.js"
+    },
+    {
+      "id": "F2-19",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/ollamaAdapter.test.js"
+    },
+    {
+      "id": "F2-20",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/openRouterAdapter.test.js"
+    },
+    {
+      "id": "F2-21",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/openRouterAdapter.test.js"
+    },
+    {
+      "id": "F2-22",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/openRouterAdapter.test.js"
+    },
+    {
+      "id": "F2-23",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/openRouterAdapter.test.js"
+    },
+    {
+      "id": "F2-24",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/fileReaderAdapter.test.js"
+    },
+    {
+      "id": "F2-25",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/fileReaderAdapter.test.js"
+    },
+    {
+      "id": "F2-26",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/fileReaderAdapter.test.js"
+    },
+    {
+      "id": "F2-27",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/fileReaderAdapter.test.js"
+    },
+    {
+      "id": "F2-28",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/fileReaderAdapter.test.js"
+    },
+    {
+      "id": "F2-29",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmModelService.test.js"
+    },
+    {
+      "id": "F2-30",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmModelService.test.js"
+    },
+    {
+      "id": "F2-31",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmModelService.test.js"
+    },
+    {
+      "id": "F2-32",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmModelService.test.js"
+    },
+    {
+      "id": "F2-33",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmModelService.test.js"
+    },
+    {
+      "id": "F2-34",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "files": [
+        "tests/llmModelService.test.js",
+        "tests/llmProcessService.test.js"
+      ]
+    },
+    {
+      "id": "F2-35",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmProcessService.test.js"
+    },
+    {
+      "id": "F2-36",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmProcessService.test.js"
+    },
+    {
+      "id": "F2-37",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmProcessService.test.js"
+    },
+    {
+      "id": "F2-38",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmProcessService.test.js"
+    },
+    {
+      "id": "F2-39",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmProcessService.test.js"
+    },
+    {
+      "id": "F2-40",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/llmProcessService.test.js"
+    },
+    {
+      "id": "F2-41",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/summaryExtractor.test.js"
+    },
+    {
+      "id": "F2-42",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/summaryExtractor.test.js"
+    },
+    {
+      "id": "F2-43",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/summaryExtractor.test.js"
+    },
+    {
+      "id": "F2-44",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-45",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-46",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-47",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-48",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-49",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-50",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/appServer.test.js"
+    },
+    {
+      "id": "F2-51",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/LlmSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F2-52",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/LlmSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F2-53",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/LlmSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F2-54",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/LlmSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-01",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-02",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-03",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-04",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-05",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-06",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-07",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-08",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-09",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-10",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-11",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-12",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-13",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetReaderAdapter.test.js"
+    },
+    {
+      "id": "F3-14",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-15",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-16",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-17",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-18",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-19",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-20",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-21",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedPlanilhaParser.test.js"
+    },
+    {
+      "id": "F3-22",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-23",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-24",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-25",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-26",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-27",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-28",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetMetadataParser.test.js"
+    },
+    {
+      "id": "F3-29",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-30",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-31",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-32",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-33",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-34",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-35",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-36",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-37",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-38",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-39",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-40",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-41",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-42",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetImporter.test.js"
+    },
+    {
+      "id": "F3-43",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedSpreadsheetLayout.test.js"
+    },
+    {
+      "id": "F3-44",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedSpreadsheetLayout.test.js"
+    },
+    {
+      "id": "F3-45",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedSpreadsheetLayout.test.js"
+    },
+    {
+      "id": "F3-46",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedSpreadsheetLayout.test.js"
+    },
+    {
+      "id": "F3-47",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedSpreadsheetLayout.test.js"
+    },
+    {
+      "id": "F3-48",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/unimedSpreadsheetLayout.test.js"
+    },
+    {
+      "id": "F3-49",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/SpreadsheetSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-50",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/SpreadsheetSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-51",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/SpreadsheetSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-52",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/SpreadsheetSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-53",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/SpreadsheetSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-54",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/SpreadsheetSummarizerBuilder.test.js"
+    },
+    {
+      "id": "F3-55",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetApi.test.js"
+    },
+    {
+      "id": "F3-56",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetApi.test.js"
+    },
+    {
+      "id": "F3-57",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetApi.test.js"
+    },
+    {
+      "id": "F3-58",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetApi.test.js"
+    },
+    {
+      "id": "F3-59",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetApi.test.js"
+    },
+    {
+      "id": "F3-60",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/spreadsheetApi.test.js"
+    },
+    {
+      "id": "F4-01",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-02",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-03",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-04",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-05",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-06",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-07",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-08",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-09",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-10",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-11",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-12",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-13",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-14",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-15",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-16",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-17",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-18",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-19",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-20",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-21",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-22",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-23",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-24",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F4-25",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logViewerService.test.js"
+    },
+    {
+      "id": "F5-01",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-02",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-03",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-04",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-05",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-06",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-07",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/totpService.test.js"
+    },
+    {
+      "id": "F5-08",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/jwtAdapter.test.js"
+    },
+    {
+      "id": "F5-09",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/jwtAdapter.test.js"
+    },
+    {
+      "id": "F5-10",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/jwtAdapter.test.js"
+    },
+    {
+      "id": "F5-11",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-12",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-13",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-14",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-15",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-16",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-17",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-18",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-19",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-20",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-21",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-22",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authService.test.js"
+    },
+    {
+      "id": "F5-23",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-24",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-25",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-26",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-27",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-28",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-29",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-30",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-31",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F5-32",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F6-01",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-02",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-03",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-04",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-05",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-06",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-07",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-08",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-09",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-10",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F6-11",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F6-12",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "files": [
+        "tests/authApi.test.js",
+        "tests/fase6MultiTenant.test.js"
+      ]
+    },
+    {
+      "id": "F6-13",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F6-14",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-15",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-16",
+      "required": [
+        "web"
+      ],
+      "status": "implemented",
+      "file": "tests/fase6MultiTenant.test.js"
+    },
+    {
+      "id": "F6-17",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F7-01",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/licenseLeaseAdapter.test.js"
+    },
+    {
+      "id": "F7-02",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/licenseLeaseAdapter.test.js"
+    },
+    {
+      "id": "F7-03",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/licenseLeaseAdapter.test.js"
+    },
+    {
+      "id": "F7-04",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/licenseLeaseAdapter.test.js"
+    },
+    {
+      "id": "F7-05",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/licenseLeaseAdapter.test.js"
+    },
+    {
+      "id": "F7-06",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/licenseLeaseAdapter.test.js"
+    },
+    {
+      "id": "F7-07",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-08",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-09",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-10",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-11",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-12",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-13",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-14",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/desktopConfig.test.js"
+    },
+    {
+      "id": "F7-15",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-16",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/desktopConfig.test.js"
+    },
+    {
+      "id": "F7-17",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-18",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-19",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-20",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-21",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-22",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-23",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-24",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-25",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-26",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-27",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-28",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-29",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-30",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-31",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-32",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-33",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-34",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-35",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-36",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-37",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-38",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-39",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-40",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-41",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-42",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-43",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-44",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-45",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-46",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-47",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-48",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-49",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-50",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-51",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-52",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-53",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-54",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/desktopBootstrap.test.js"
+    },
+    {
+      "id": "F7-55",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-56",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-57",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-58",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-59",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/createDesktopApp.test.js"
+    },
+    {
+      "id": "F7-60",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/createDesktopApp.test.js"
+    },
+    {
+      "id": "F7-61",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/createDesktopApp.test.js"
+    },
+    {
+      "id": "F7-62",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/createDesktopApp.test.js"
+    },
+    {
+      "id": "F7-63",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/desktopSecretStore.test.js"
+    },
+    {
+      "id": "F7-64",
+      "required": [
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/desktopSecretStore.test.js"
+    },
+    {
+      "id": "F7-65",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-66",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-67",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-68",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-69",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "F7-70",
+      "required": [
+        "win"
+      ],
+      "status": "pending",
+      "file": null
+    },
+    {
+      "id": "RED-01",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-02",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-03",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-04",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-05",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-06",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-07",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-08",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-09",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/scanner.test.js"
+    },
+    {
+      "id": "RED-10",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-11",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-12",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-13",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-14",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-15",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-16",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-17",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-18",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/extractor.test.js"
+    },
+    {
+      "id": "RED-19",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-20",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-21",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-22",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-23",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-24",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-25",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-26",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-27",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-28",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-29",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
+      "id": "RED-30",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-31",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-32",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-33",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-34",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-35",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-36",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/linker.test.js"
+    },
+    {
+      "id": "RED-37",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "RED-38",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "RED-39",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "RED-40",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "RED-41",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "RED-42",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "RED-43",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/logger.test.js"
+    },
+    {
+      "id": "F8-130",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/securityHardening.test.js"
+    },
+    {
+      "id": "F8-131",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/securityHardening.test.js"
+    },
+    {
+      "id": "F8-132",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/securityHardening.test.js"
+    },
+    {
+      "id": "F8-133",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/securityHardening.test.js"
+    },
+    {
+      "id": "F8-134",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/securityHardening.test.js"
+    },
+    {
+      "id": "F8-135",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    },
+    {
+      "id": "F8-136",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/authApi.test.js"
+    }
+  ],
+  "files": [
+    {
+      "path": "tests/builder.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/changePassword.test.js",
+      "required": [
+        "win"
+      ]
+    },
+    {
+      "path": "tests/webEntrypointIsolation.test.js",
+      "required": [
+        "win"
+      ]
+    },
+    {
+      "path": "tests/fsBrowser.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/inputApi.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/inputProcessService.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/llmAdapter.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/loadEnv.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/persistenceAdapter.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/securityHardening.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/stagingUpload.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/tableParser.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/unimedMetadataParser.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/unimedResumoGeral.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    },
+    {
+      "path": "tests/userWorkspace.test.js",
+      "required": [
+        "web",
+        "win"
+      ]
+    }
+  ]
+}

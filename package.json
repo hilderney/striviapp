@@ -1,0 +1,24 @@
+{
+  "name": "striviapp-monorepo",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Monorepo: web/ (Fases 1–6) and win/ (Fase 7 desktop)",
+  "scripts": {
+    "install:all": "npm --prefix web install && npm --prefix win install",
+    "dev": "node scripts/dev.js",
+    "dev:web": "npm --prefix web run dev",
+    "dev:win": "npm --prefix win run dev",
+    "verify:parity": "node scripts/verify-test-parity.js --product web && node scripts/verify-test-parity.js --product win",
+    "test": "npm run test:web && npm run test:win",
+    "test:web": "npm --prefix web test",
+    "test:win": "npm --prefix win test",
+    "start:web": "npm --prefix web run start:web",
+    "start:desktop": "npm --prefix win run start:desktop",
+    "build:win": "npm --prefix win run dist:win",
+    "build": "npm run test && npm run build:win"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Striviapp</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Striviapp</h1>
+      <p class="subtitle">PDFs e planilhas Unimed — processamento local</p>
+    </div>
+    <div class="header-session">
+      <span id="subscription-badge" class="subscription-badge"></span>
+      <span id="user-badge" class="user-badge"></span>
+      <span id="session-countdown" class="session-countdown" title="Tempo restante da sessão" aria-live="polite"></span>
+      <button type="button" id="btn-authenticator" class="btn-secondary">Authenticator</button>
+      <button type="button" id="btn-change-password" class="btn-secondary">Trocar senha</button>
+      <button type="button" id="btn-logout" class="btn-secondary">Sair</button>
+    </div>
+  </header>
+
+  <section id="login-screen" class="login-screen hidden" hidden>
+    <form id="login-form" class="card login-card">
+      <h2>Entrar</h2>
+      <p class="hint">Acesso restrito — informe suas credenciais.</p>
+      <label>Usuário
+        <input type="text" id="login-username" autocomplete="username" required>
+      </label>
+      <label>Senha
+        <input type="password" id="login-password" autocomplete="current-password" required>
+      </label>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <div class="actions">
+        <button type="submit">Entrar</button>
+      </div>
+    </form>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="files">Arquivos</button>
+    <button class="tab" data-tab="logs">Logs</button>
+    <button class="tab" data-tab="models">LLM Config</button>
+    <button class="tab" data-tab="process">LLM</button>
+  </nav>
+
+  <main>
+    <section id="tab-files" class="panel active">
+      <h2>Entrada de arquivos</h2>
+      <p class="hint intro-hint">
+        Selecione ou arraste apenas os arquivos desejados. Formatos aceitos: <strong>.pdf</strong>, <strong>.xlsx</strong> e <strong>.xls</strong>.
+      </p>
+
+      <div id="file-drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Arraste PDFs e planilhas aqui ou clique para selecionar">
+        <div class="drop-zone-content">
+          <span class="drop-zone-icon" aria-hidden="true">📂</span>
+          <p class="drop-zone-title">Arraste arquivos aqui</p>
+          <p class="drop-zone-subtitle">PDFs e planilhas (.pdf, .xlsx, .xls) — ou clique para escolher</p>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept=".pdf,.xlsx,.xls,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/octet-stream" multiple hidden style="display: none;">
+
+      <div class="actions">
+        <button type="button" id="btn-pick-files">Selecionar arquivos...</button>
+        <button type="button" id="btn-clear-files" class="btn-secondary">Limpar</button>
+        <button type="button" id="btn-process-selected">Processar selecionados</button>
+      </div>
+
+      <p id="selection-summary" class="hint">Nenhum arquivo selecionado. Arraste arquivos ou use o botão abaixo.</p>
+
+      <table id="selected-files-table" class="selected-files-table">
+        <thead>
+          <tr>
+            <th class="col-check"><input type="checkbox" id="select-all-files" checked aria-label="Selecionar todos"></th>
+            <th>Arquivo</th>
+            <th>Tipo</th>
+            <th>Tamanho</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="process-metadata" class="card summary"></div>
+      <pre id="files-log" class="log"></pre>
+
+      <h3>Arquivos gerados</h3>
+      <table id="output-files-table">
+        <thead>
+          <tr><th>Nome</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="tab-logs" class="panel">
+      <h2>Logs de sessão</h2>
+      <div class="actions">
+        <label>
+          <input type="search" id="log-search" placeholder="Buscar log..." aria-label="Buscar log">
+        </label>
+        <label>
+          Ordenar
+          <select id="log-sort" aria-label="Ordenar logs">
+            <option value="date-desc" selected>Data (mais recente)</option>
+            <option value="date-asc">Data (mais antiga)</option>
+            <option value="name-asc">Nome (A–Z)</option>
+            <option value="name-desc">Nome (Z–A)</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="log-delete-selected" disabled>Excluir selecionados</button>
+        <span id="log-count" class="hint">0 de 0 arquivos selecionados</span>
+      </div>
+
+      <table id="log-table">
+        <thead>
+          <tr>
+            <th class="col-check"><input type="checkbox" id="log-select-all" aria-label="Selecionar todos"></th>
+            <th>Arquivo</th>
+            <th>Tamanho</th>
+            <th>Modificado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <h3 id="log-content-title" hidden></h3>
+      <pre id="log-content" class="log"></pre>
+    </section>
+
+    <section id="tab-models" class="panel">
+      <h2>Modelos LLM</h2>
+      <form id="model-form" class="card">
+        <input type="hidden" id="model-id">
+        <label>Nome <input type="text" id="model-name" required></label>
+        <label>Provider
+          <select id="model-provider">
+            <option value="ollama">Ollama</option>
+            <option value="openrouter">OpenRouter</option>
+          </select>
+        </label>
+        <label>Model ID <input type="text" id="model-model-id" required placeholder="llama3"></label>
+        <label>Base URL <input type="text" id="model-base-url" placeholder="http://127.0.0.1:11434"></label>
+        <label>Token <input type="password" id="model-token" placeholder="sk-or-..." autocomplete="off"></label>
+        <p id="model-token-hint" class="field-hint" hidden></p>
+        <label><input type="checkbox" id="model-default"> Modelo padrão</label>
+        <div class="actions">
+          <button type="submit" id="btn-save-model">Salvar</button>
+          <button type="button" id="btn-reset-model">Limpar</button>
+        </div>
+      </form>
+      <table id="models-table">
+        <thead>
+          <tr><th>Nome</th><th>Provider</th><th>Model ID</th><th>Token</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="tab-process" class="panel">
+      <h2>Processar com LLM</h2>
+      <label>Modelo
+        <select id="llm-model-select"></select>
+      </label>
+      <label>Arquivo
+        <select id="source-file-select"></select>
+      </label>
+      <label>Instruções adicionais
+        <textarea id="prompt-template" rows="4" placeholder="Analise os dados e retorne JSON com summary e insights."></textarea>
+      </label>
+      <div class="actions">
+        <button id="btn-process">Enviar para LLM</button>
+      </div>
+      <div id="llm-summary" class="summary card"></div>
+      <p><a id="llm-response-link" href="#" target="_blank" rel="noopener"></a></p>
+    </section>
+  </main>
+
+  <div id="totp-setup-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="totp-setup-title" hidden>
+    <div class="modal-backdrop" data-totp-dismiss></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="totp-setup-title">Configurar segunda etapa (TOTP)</h3>
+        <button type="button" id="totp-setup-close" class="modal-close hidden" data-totp-dismiss aria-label="Fechar" hidden>&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="totp-password-form" class="hidden" hidden>
+          <p class="hint">
+            Seu autenticador atual continua valendo até você ativar o novo.
+            Confirme sua senha para ver o QR Code.
+          </p>
+          <label>Senha
+            <input type="password" id="totp-password" autocomplete="current-password" required>
+          </label>
+          <p id="totp-password-error" class="form-error" role="alert"></p>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" data-totp-dismiss>Cancelar</button>
+            <button type="submit">Mostrar QR Code</button>
+          </div>
+        </form>
+        <div id="totp-setup-step" class="hidden" hidden>
+          <p class="hint">
+            Escaneie o QR Code com o Google Authenticator, Authy ou similar.
+            Se preferir, digite o segredo manualmente. Depois confirme com o código de 6 dígitos.
+          </p>
+          <div class="totp-qr-wrap">
+            <img id="totp-setup-qr" class="totp-qr" alt="QR Code para configurar o autenticador" width="240" height="240">
+          </div>
+          <details class="totp-manual">
+            <summary>Entrada manual / URI</summary>
+            <p class="totp-secret-label">Segredo:</p>
+            <code id="totp-setup-secret" class="totp-secret"></code>
+            <p class="totp-secret-label">URI otpauth:</p>
+            <code id="totp-setup-uri" class="totp-uri"></code>
+          </details>
+          <form id="totp-setup-form">
+            <label>Código de 6 dígitos
+              <input type="text" id="totp-setup-code" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required>
+            </label>
+            <p id="totp-setup-error" class="form-error" role="alert"></p>
+            <div class="modal-actions">
+              <button type="submit">Ativar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="elevate-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="elevate-title" hidden>
+    <div class="modal-backdrop" data-elevate-dismiss></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="elevate-title">Confirmação de segurança</h3>
+        <button type="button" class="modal-close" data-elevate-dismiss aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="hint">
+          Para processar ou ler arquivos, informe o código atual do seu aplicativo autenticador.
+          A liberação vale por 15 minutos.
+        </p>
+        <form id="elevate-form">
+          <label>Código de 6 dígitos
+            <input type="text" id="elevate-code" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required>
+          </label>
+          <p id="elevate-error" class="form-error" role="alert"></p>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" data-elevate-dismiss>Cancelar</button>
+            <button type="submit">Liberar acesso</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="password-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="password-title" hidden>
+    <div class="modal-backdrop" data-password-dismiss></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="password-title">Trocar senha</h3>
+        <button type="button" class="modal-close" data-password-dismiss aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="hint">
+          A nova senha precisa ter no mínimo 8 caracteres. As outras sessões abertas
+          serão desconectadas.
+        </p>
+        <form id="password-form">
+          <label>Senha atual
+            <input type="password" id="password-current" autocomplete="current-password" required>
+          </label>
+          <label>Nova senha
+            <input type="password" id="password-new" autocomplete="new-password" minlength="8" required>
+          </label>
+          <label>Confirmar nova senha
+            <input type="password" id="password-confirm" autocomplete="new-password" minlength="8" required>
+          </label>
+          <p id="password-error" class="form-error" role="alert"></p>
+          <p id="password-success" class="form-success" role="status"></p>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" data-password-dismiss>Cancelar</button>
+            <button type="submit">Salvar nova senha</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirm-delete-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-delete-title" hidden>
+    <div class="modal-backdrop" data-confirm-dismiss></div>
+    <div class="modal-dialog modal-dialog--confirm">
+      <div class="modal-header">
+        <h3 id="confirm-delete-title">Excluir arquivo</h3>
+        <button type="button" class="modal-close" data-confirm-dismiss aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-delete-message"></p>
+        <p class="confirm-warning">Após excluído, o arquivo não poderá mais ser recuperado.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" data-confirm-dismiss>Cancelar</button>
+          <button type="button" class="btn-danger" id="confirm-delete-btn">Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/session-store.js"></script>
+  <script src="/js/api-client.js"></script>
+  <script src="/js/auth-ui.js"></script>
+  <script src="/js/file-input-utils.js"></script>
+  <script src="/js/input-ui.js"></script>
+  <script src="/js/logs-ui.js"></script>
+  <script src="/js/llm-ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "striviapp-web",
+  "version": "0.1.0",
+  "description": "PDF text extraction, export pipeline and LLM integration (web / Fases 1–6)",
+  "main": "src/index.js",
+  "scripts": {
+    "pretest": "node ../scripts/verify-test-parity.js --product web",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "dev": "nodemon --watch src --watch public --ext js,html,css src/server.js",
+    "start": "node src/index.js",
+    "start:web": "node src/server.js",
+    "start:spreadsheet": "node src/spreadsheet-cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^17.4.2",
+    "exceljs": "^4.4.0",
+    "iconv-lite": "^0.7.3",
+    "mysql2": "^3.23.1",
+    "pdf-parse": "^2.4.5",
+    "pino": "^10.3.1",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.14",
+    "pdf-lib": "^1.17.1"
+  }
+}
