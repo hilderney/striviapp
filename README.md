@@ -46,9 +46,38 @@ Encadeia, nesta ordem:
 1. `npm test` → suítes de `web/` e `win/` (paridade via `pretest`)
 2. `npm run build:win` → `electron-builder` NSIS
 
-Artefato: `win/dist/Striviapp-Setup-2.0.0.exe`.
+**Importante:** feche o app desktop (e qualquer processo que esteja usando `win/dist/`) antes de `npm test` ou `npm run build`. No `win/`, testes usam ABI Node e o build usa ABI Electron; se o `.node` ou o `app.asar` estiver em uso, a recompilação/empacotamento falha no Windows.
 
-**Importante:** feche o app desktop antes de `npm test` ou `npm run build`. No `win/`, testes usam ABI Node e o build usa ABI Electron; se o `.node` estiver em uso, a recompilação falha no Windows.
+### Instalador Windows (NSIS)
+
+Artefato para distribuição:
+
+`win/dist/Striviapp-Setup-2.0.0.exe`
+
+| | |
+|---|---|
+| Formato | NSIS (wizard, não one-click) |
+| Arquitetura | x64 |
+| Instalação | Por usuário (`perMachine: false`); permite escolher a pasta |
+| Atalhos | Desktop e Menu Iniciar |
+| Desinstalação | Não apaga `%APPDATA%\striviapp-win\` (`deleteAppDataOnUninstall: false`) |
+
+Gerar **só** o instalador (sem rodar testes):
+
+```bash
+npm run build:win
+```
+
+Ou, dentro de `win/`:
+
+```bash
+cd win
+npm run dist:win   # ou: npm run build
+```
+
+O arquivo gerado é o que você distribui aos usuários finais. O servidor de licenças (`win/license-server/`) **não** entra no EXE.
+
+**Assinatura de código:** o instalador sai sem certificado. O SmartScreen do Windows pode exibir aviso de “editor desconhecido” na primeira execução — esperado até haver code signing.
 
 ### Outros comandos da raiz
 
@@ -81,6 +110,8 @@ npm run test:win
 npm run start:desktop
 # ou, com watch: npm run dev:win
 ```
+
+Para gerar o instalador NSIS (`win/dist/Striviapp-Setup-2.0.0.exe`), veja [Instalador Windows (NSIS)](#instalador-windows-nsis) acima (`npm run build:win`).
 
 Licenças (API MySQL, não empacotada no EXE):
 
