@@ -15,12 +15,6 @@ function bootstrapAppModules() {
     console.error('initInputUi não definido — verifique /js/input-ui.js e /js/file-input-utils.js');
   }
 
-  if (typeof window.initLlmUi === 'function') {
-    window.initLlmUi();
-  } else {
-    console.error('initLlmUi não definido — verifique /js/llm-ui.js');
-  }
-
   if (typeof window.initLogsUi === 'function') {
     window.initLogsUi();
   } else {

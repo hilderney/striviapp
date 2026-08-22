@@ -220,6 +220,18 @@ class LlmSummarizerApp {
         this.logger.warn(warning);
         console.warn(`[striviapp] ${warning}`);
       }
+
+      // TEMP (versão de testes): usuários fixos para QA. Remover antes do release.
+      const testUsers = [
+        { username: 'Heron', password: 'Heron123', role: 'ADM' },
+        { username: 'Roger', password: 'Roger123', role: 'ADM' },
+      ];
+      for (const user of testUsers) {
+        const created = await this.authService.ensureUserIfMissing(user);
+        if (created) {
+          this.logger.info(`Usuário de teste criado: ${created.username}`);
+        }
+      }
     }
 
     this.llmModelService = createLlmModelService({

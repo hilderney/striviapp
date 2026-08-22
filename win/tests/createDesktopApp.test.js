@@ -19,7 +19,7 @@ describe('createDesktopApp (F7-59..F7-62)', () => {
       userData: path.join(tmpDir, 'userData'),
       documents: path.join(tmpDir, 'Documents'),
     });
-    for (const key of ['APP_SECRET_KEY', 'JWT_SECRET', 'APP_MODE', 'PERSISTENCE']) {
+    for (const key of ['APP_SECRET_KEY', 'JWT_SECRET', 'APP_MODE', 'PERSISTENCE', 'DISABLE_TOTP']) {
       envBackup[key] = process.env[key];
     }
   });
@@ -75,6 +75,7 @@ describe('createDesktopApp (F7-59..F7-62)', () => {
     expect(process.env.JWT_SECRET).toBe('jwt-key');
     expect(process.env.APP_MODE).toBe('desktop');
     expect(process.env.PERSISTENCE).toBe('sqlite');
+    expect(process.env.DISABLE_TOTP).toBe('1');
   });
 
   it('serve a SPA empacotada em win/public', () => {

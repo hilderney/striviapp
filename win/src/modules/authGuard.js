@@ -1,4 +1,5 @@
 const { AuthError } = require('../errors');
+const { assertDemoActive } = require('./demoExpiry');
 
 const ACCESS_PUBLIC = 'public';
 const ACCESS_SESSION = 'session';
@@ -11,6 +12,8 @@ const ADMIN_ONLY = ['ADM'];
 const ROUTE_POLICIES = [
   { match: (p) => p === '/', access: ACCESS_PUBLIC },
   { match: (p) => p.startsWith('/css/') || p.startsWith('/js/'), access: ACCESS_PUBLIC },
+  { match: (p) => p.startsWith('/assets/'), access: ACCESS_PUBLIC },
+  { match: (p) => p === '/favicon.ico' || p === '/favicon.png', access: ACCESS_PUBLIC },
   { match: (p) => p === '/api/v1/auth/login', access: ACCESS_PUBLIC },
   { match: (p) => p === '/api/v1/auth/refresh', access: ACCESS_PUBLIC },
 
@@ -118,6 +121,12 @@ function extractElevationToken(req, url, pathname) {
   return null;
 }
 
+// TEMP (versão de testes): desliga elevação TOTP quando DISABLE_TOTP=1.
+// createDesktopApp / createWebApp do win/ setam essa flag. Remover antes do release.
+function isTotpDisabled() {
+  return process.env.DISABLE_TOTP === '1';
+}
+
 function createAuthGuard({ authService }) {
   return {
     // → { userId, username, role } ou lança AuthError 401/403.
@@ -126,6 +135,9 @@ function createAuthGuard({ authService }) {
       if (policy.access === ACCESS_PUBLIC) {
         return null;
       }
+
+      // Demo timer: bloqueia listagem, processamento e demais rotas autenticadas.
+      assertDemoActive();
 
       const accessToken = extractAccessToken(req, url, pathname);
       if (!accessToken) {
@@ -142,14 +154,16 @@ function createAuthGuard({ authService }) {
         });
       }
 
-      if (policy.subscription || policy.elevation) {
+      const requireElevation = policy.elevation && !isTotpDisabled();
+
+      if (policy.subscription || requireElevation) {
         const user = await authService.getUser(auth.userId);
         if (policy.subscription) {
           authService.requireActiveSubscription(user);
         }
       }
 
-      if (policy.elevation) {
+      if (requireElevation) {
         const elevationToken = extractElevationToken(req, url, pathname);
         if (!elevationToken) {
           throw new AuthError('TOTP elevation required for file operations', {

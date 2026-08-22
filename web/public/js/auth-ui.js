@@ -1,11 +1,12 @@
 // Controla login, elevação TOTP e visibilidade por role.
 // A UI é só conveniência: o backend revalida role e elevação em toda rota.
+// TEMP (versão de testes): TOTP / elevação desligados na UI.
+const TOTP_DISABLED = true;
+
 function initAuthUi({ onAuthenticated }) {
   const TAB_ROLES = {
     files: ['ADM', 'USER'],
-    logs: ['ADM'],
-    models: ['ADM', 'USER'],
-    process: ['ADM', 'USER'],
+    logs: ['ADM', 'USER'],
   };
 
   const loginScreen = document.getElementById('login-screen');
@@ -128,6 +129,12 @@ function initAuthUi({ onAuthenticated }) {
     document.getElementById('login-username').focus();
   }
 
+  function showDemoExpired(event) {
+    showLoginScreen();
+    loginError.textContent =
+      event?.detail?.message || 'O limite do software de demonstração foi atingido.';
+  }
+
   function applyRoleToTabs(role) {
     const allowedTabs = Object.entries(TAB_ROLES)
       .filter(([, roles]) => roles.includes(role))
@@ -149,23 +156,10 @@ function initAuthUi({ onAuthenticated }) {
     if (!subscriptionBadge) {
       return;
     }
-    if (role === 'ADM') {
-      subscriptionBadge.textContent = 'Assinatura: ilimitada';
-      subscriptionBadge.classList.remove('subscription-expired');
-      return;
-    }
-    if (!subscription) {
-      subscriptionBadge.textContent = '';
-      return;
-    }
-    if (subscription.active) {
-      const until = subscription.expiresAt
-        ? new Date(subscription.expiresAt).toLocaleDateString('pt-BR')
-        : '—';
-      subscriptionBadge.textContent = `Assinatura até ${until}`;
-      subscriptionBadge.classList.remove('subscription-expired');
-    } else {
-      subscriptionBadge.textContent = 'Assinatura expirada — contate o administrador';
+    // Demo: validade fixa do timer block (independente de role/assinatura).
+    subscriptionBadge.textContent = 'Assinatura: Válida até 25/11/2026';
+    subscriptionBadge.classList.remove('subscription-expired');
+    if (subscription && subscription.active === false && role !== 'ADM') {
       subscriptionBadge.classList.add('subscription-expired');
     }
   }
@@ -273,7 +267,8 @@ function initAuthUi({ onAuthenticated }) {
     try {
       const session = await api.login(username, password);
       sessionStore.saveSession(session);
-      if (session.user.totpEnabled) {
+      // TEMP (versão de testes): pula cadastro/exigência de TOTP.
+      if (TOTP_DISABLED || session.user.totpEnabled) {
         const me = await api.authMe();
         enterApp(me.user, me.subscription);
       } else {
@@ -281,7 +276,11 @@ function initAuthUi({ onAuthenticated }) {
       }
     } catch (error) {
       loginError.textContent =
-        error.code === 'INVALID_CREDENTIALS' ? 'Usuário ou senha inválidos.' : error.message;
+        error.code === 'DEMO_EXPIRED'
+          ? 'O limite do software de demonstração foi atingido.'
+          : error.code === 'INVALID_CREDENTIALS'
+            ? 'Usuário ou senha inválidos.'
+            : error.message;
     }
   }
 
@@ -301,6 +300,10 @@ function initAuthUi({ onAuthenticated }) {
   }
 
   function handleAuthenticatorClick() {
+    // TEMP (versão de testes): Authenticator desligado.
+    if (TOTP_DISABLED) {
+      return;
+    }
     if (!sessionStore.isLoggedIn()) {
       return;
     }
@@ -325,6 +328,10 @@ function initAuthUi({ onAuthenticated }) {
   }
 
   function showElevateModal() {
+    // TEMP (versão de testes): elevação TOTP desligada.
+    if (TOTP_DISABLED) {
+      return;
+    }
     if (!sessionStore.isLoggedIn()) {
       return;
     }
@@ -360,14 +367,19 @@ function initAuthUi({ onAuthenticated }) {
       if (!sessionStore.accessExpiresAtMs) {
         sessionStore.syncAccessExpiryFromToken();
       }
-      if (me.user.totpEnabled) {
+      // TEMP (versão de testes): pula cadastro/exigência de TOTP.
+      if (TOTP_DISABLED || me.user.totpEnabled) {
         enterApp(me.user, me.subscription);
       } else {
         await openTotpSetup({ dismissible: false });
       }
-    } catch {
+    } catch (error) {
       sessionStore.clear();
-      showLoginScreen();
+      if (error?.code === 'DEMO_EXPIRED') {
+        showDemoExpired({ detail: { message: error.message } });
+      } else {
+        showLoginScreen();
+      }
     }
   }
 
@@ -391,6 +403,7 @@ function initAuthUi({ onAuthenticated }) {
 
   window.addEventListener('auth:elevation-required', showElevateModal);
   window.addEventListener('auth:subscription-expired', showSubscriptionExpired);
+  window.addEventListener('auth:demo-expired', showDemoExpired);
   window.addEventListener('auth:logged-out', showLoginScreen);
   window.addEventListener('auth:session-refreshed', () => {
     startSessionCountdown();

@@ -103,6 +103,14 @@ const api = {
       if (error.status === 403 && error.code === 'SUBSCRIPTION_EXPIRED') {
         window.dispatchEvent(new CustomEvent('auth:subscription-expired'));
       }
+      if (error.status === 403 && error.code === 'DEMO_EXPIRED') {
+        window.sessionStore?.clear();
+        window.dispatchEvent(
+          new CustomEvent('auth:demo-expired', {
+            detail: { message: error.message },
+          }),
+        );
+      }
       throw error;
     }
   },

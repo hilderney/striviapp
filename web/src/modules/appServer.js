@@ -16,6 +16,12 @@ const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8',
+  '.ico': 'image/x-icon',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
 };
 
 const DEFAULT_FORMATS = ['csv', 'xlsx'];
@@ -564,7 +570,14 @@ function routeRequest(ctx, req, res, url, auth) {
     return serveStaticFile(res, ctx.staticDir, 'index.html');
   }
 
-  if (isGet && (pathname.startsWith('/css/') || pathname.startsWith('/js/'))) {
+  if (
+    isGet &&
+    (pathname.startsWith('/css/') ||
+      pathname.startsWith('/js/') ||
+      pathname.startsWith('/assets/') ||
+      pathname === '/favicon.ico' ||
+      pathname === '/favicon.png')
+  ) {
     return serveStaticFile(res, ctx.staticDir, pathname.slice(1));
   }
 

@@ -30,6 +30,7 @@ function createMainWindow(url) {
     show: false,
     backgroundColor: '#111827',
     title: 'Striviapp',
+    icon: path.join(__dirname, '..', 'assets', 'ico', 'Strviaap_256.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

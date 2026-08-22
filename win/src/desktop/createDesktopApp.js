@@ -36,6 +36,8 @@ function createDesktopApp({ paths, phase1Api, appSecretKey, jwtSecret } = {}) {
   // Desktop é sempre single-tenant local em SQLite; ignora PERSISTENCE do ambiente.
   process.env.APP_MODE = 'desktop';
   process.env.PERSISTENCE = 'sqlite';
+  // TEMP (versão de testes): desliga validação TOTP / elevação.
+  process.env.DISABLE_TOTP = '1';
 
   return LlmSummarizerBuilder.create()
     .fromPhase1Api(phase1Api)

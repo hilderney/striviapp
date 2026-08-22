@@ -10,6 +10,7 @@ files:
   - desktop/**/*
   - src/**/*
   - public/**/*
+  - assets/**/*
   - package.json
   - "!**/*.test.js"
   - "!tests/**/*"
@@ -20,6 +21,7 @@ asarUnpack:
   - "**/*.node"
 
 win:
+  icon: assets/ico/Strviaap_256.ico
   target:
     - target: nsis
       arch:
@@ -32,3 +34,6 @@ nsis:
   createDesktopShortcut: true
   createStartMenuShortcut: true
   deleteAppDataOnUninstall: false
+  installerIcon: assets/ico/Strviaap_256.ico
+  uninstallerIcon: assets/ico/Strviaap_256.ico
+  installerHeaderIcon: assets/ico/Strviaap_256.ico

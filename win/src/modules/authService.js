@@ -8,6 +8,7 @@ const {
   buildOtpauthUri,
   verifyTotpCode,
 } = require('./totpService');
+const { assertDemoActive } = require('./demoExpiry');
 
 const ACCESS_TTL_SECONDS_DEFAULT = 15 * 60;
 const REFRESH_TTL_SECONDS_DEFAULT = 7 * 24 * 60 * 60;
@@ -159,6 +160,14 @@ function createAuthService(options = {}) {
         return null;
       }
       return this.createUser({ username, password, role: 'ADM' });
+    },
+
+    // Cria o usuário se o username ainda não existir (idempotente para bootstrap).
+    async ensureUserIfMissing({ username, password, role }) {
+      if (await persistence.getUserByUsername(username)) {
+        return null;
+      }
+      return this.createUser({ username, password, role });
     },
 
     async createUser({
@@ -319,6 +328,8 @@ function createAuthService(options = {}) {
     },
 
     async login({ username, password }) {
+      assertDemoActive();
+
       const user =
         typeof username === 'string' && username
           ? await persistence.getUserByUsername(username)
@@ -331,6 +342,8 @@ function createAuthService(options = {}) {
     },
 
     async refresh({ refreshToken }) {
+      assertDemoActive();
+
       const stored = refreshToken
         ? await persistence.getRefreshToken(hashRefreshToken(refreshToken))
         : null;

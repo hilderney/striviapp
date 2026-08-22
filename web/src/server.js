@@ -33,6 +33,9 @@ function resolvePersistenceConfig() {
 }
 
 function createWebApp() {
+  // TEMP (versão de testes): desliga validação TOTP / elevação.
+  process.env.DISABLE_TOTP = '1';
+
   const persistence = resolvePersistenceConfig();
   const app = LlmSummarizerBuilder.create()
     .fromPhase1Api(phase1Api)

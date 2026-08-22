@@ -178,6 +178,8 @@ describe('POST /api/v1/auth/password', () => {
       await app.close();
     }
     fs.rmSync(tmpDir, { recursive: true, force: true });
+    delete process.env.DISABLE_TOTP;
+    delete process.env.APP_MODE;
   });
 
   async function postJson(routePath, body, token = null) {

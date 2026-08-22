@@ -36,6 +36,8 @@ describe('desktop bootstrap integração (F7-54)', () => {
       await app.close();
     }
     fs.rmSync(tmpDir, { recursive: true, force: true });
+    delete process.env.DISABLE_TOTP;
+    delete process.env.APP_MODE;
   });
 
   it('sobe o servidor local em porta efêmera de loopback', () => {

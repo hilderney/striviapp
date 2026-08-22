@@ -4,19 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Striviapp</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/logo-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/logo-16.png">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/ico/logo-48.png">
   <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
   <header>
-    <div>
-      <h1>Striviapp</h1>
-      <p class="subtitle">PDFs e planilhas Unimed — processamento local</p>
+    <div class="brand">
+      <span class="brand-logo" role="img" aria-label="Striviapp"></span>
+      <div>
+        <h1>Striviapp</h1>
+        <p class="subtitle">PDFs e planilhas Unimed — processamento local</p>
+      </div>
     </div>
     <div class="header-session">
       <span id="subscription-badge" class="subscription-badge"></span>
       <span id="user-badge" class="user-badge"></span>
       <span id="session-countdown" class="session-countdown" title="Tempo restante da sessão" aria-live="polite"></span>
-      <button type="button" id="btn-authenticator" class="btn-secondary">Authenticator</button>
+      <!-- TEMP (versão de testes): Authenticator oculto enquanto TOTP está desligado -->
+      <button type="button" id="btn-authenticator" class="btn-secondary" hidden style="display: none;">Authenticator</button>
       <button type="button" id="btn-change-password" class="btn-secondary">Trocar senha</button>
       <button type="button" id="btn-logout" class="btn-secondary">Sair</button>
     </div>
@@ -42,13 +50,11 @@
   <nav class="tabs">
     <button class="tab active" data-tab="files">Arquivos</button>
     <button class="tab" data-tab="logs">Logs</button>
-    <button class="tab" data-tab="models">LLM Config</button>
-    <button class="tab" data-tab="process">LLM</button>
   </nav>
 
   <main>
     <section id="tab-files" class="panel active">
-      <h2>Entrada de arquivos</h2>
+      <h2>Área de Entrada de arquivos</h2>
       <p class="hint intro-hint">
         Selecione ou arraste apenas os arquivos desejados. Formatos aceitos: <strong>.pdf</strong>, <strong>.xlsx</strong> e <strong>.xls</strong>.
       </p>
@@ -70,6 +76,7 @@
 
       <p id="selection-summary" class="hint">Nenhum arquivo selecionado. Arraste arquivos ou use o botão abaixo.</p>
 
+      <h3>Arquivos carregados</h3>
       <table id="selected-files-table" class="selected-files-table">
         <thead>
           <tr>
@@ -82,9 +89,6 @@
         </thead>
         <tbody></tbody>
       </table>
-
-      <div id="process-metadata" class="card summary"></div>
-      <pre id="files-log" class="log"></pre>
 
       <h3>Arquivos gerados</h3>
       <table id="output-files-table">
@@ -132,53 +136,12 @@
 
       <h3 id="log-content-title" hidden></h3>
       <pre id="log-content" class="log"></pre>
-    </section>
 
-    <section id="tab-models" class="panel">
-      <h2>Modelos LLM</h2>
-      <form id="model-form" class="card">
-        <input type="hidden" id="model-id">
-        <label>Nome <input type="text" id="model-name" required></label>
-        <label>Provider
-          <select id="model-provider">
-            <option value="ollama">Ollama</option>
-            <option value="openrouter">OpenRouter</option>
-          </select>
-        </label>
-        <label>Model ID <input type="text" id="model-model-id" required placeholder="llama3"></label>
-        <label>Base URL <input type="text" id="model-base-url" placeholder="http://127.0.0.1:11434"></label>
-        <label>Token <input type="password" id="model-token" placeholder="sk-or-..." autocomplete="off"></label>
-        <p id="model-token-hint" class="field-hint" hidden></p>
-        <label><input type="checkbox" id="model-default"> Modelo padrão</label>
-        <div class="actions">
-          <button type="submit" id="btn-save-model">Salvar</button>
-          <button type="button" id="btn-reset-model">Limpar</button>
-        </div>
-      </form>
-      <table id="models-table">
-        <thead>
-          <tr><th>Nome</th><th>Provider</th><th>Model ID</th><th>Token</th><th>Ações</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
+      <h3>Metadados do processamento</h3>
+      <div id="process-metadata" class="card summary"></div>
 
-    <section id="tab-process" class="panel">
-      <h2>Processar com LLM</h2>
-      <label>Modelo
-        <select id="llm-model-select"></select>
-      </label>
-      <label>Arquivo
-        <select id="source-file-select"></select>
-      </label>
-      <label>Instruções adicionais
-        <textarea id="prompt-template" rows="4" placeholder="Analise os dados e retorne JSON com summary e insights."></textarea>
-      </label>
-      <div class="actions">
-        <button id="btn-process">Enviar para LLM</button>
-      </div>
-      <div id="llm-summary" class="summary card"></div>
-      <p><a id="llm-response-link" href="#" target="_blank" rel="noopener"></a></p>
+      <h3>Log de arquivos</h3>
+      <pre id="files-log" class="log"></pre>
     </section>
   </main>
 
@@ -318,7 +281,6 @@
   <script src="/js/file-input-utils.js"></script>
   <script src="/js/input-ui.js"></script>
   <script src="/js/logs-ui.js"></script>
-  <script src="/js/llm-ui.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>
