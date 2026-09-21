@@ -1,22 +1,47 @@
 const path = require('path');
 const { getInputFileType } = require('./stagingUpload');
 const { importSpreadsheet } = require('./spreadsheetImporter');
+const { buildOutputBaseName } = require('../utils/paths');
 
 async function processPdfFile(filePath, outputDir, phase1Api, options = {}) {
   const batch = await phase1Api.extractBatch([filePath], outputDir, {
     overwrite: options.overwrite !== false,
   });
 
-  const exports = { csv: [], xlsx: [] };
+  const formats = options.formats || ['xlsx'];
+  const exports = { csv: [], xlsx: [], pdf: [] };
+  const sourceFile = path.basename(filePath);
 
   for (const result of batch.results) {
-    exports.csv.push(await phase1Api.exportCsv([result], outputDir, options.exportOptions));
-    exports.xlsx.push(await phase1Api.exportXlsx([result], outputDir, options.exportOptions));
+    if (formats.includes('csv')) {
+      exports.csv.push(
+        await phase1Api.exportCsv([result], outputDir, {
+          ...options.exportOptions,
+          fileName: `${buildOutputBaseName(sourceFile, 'csv')}.csv`,
+        }),
+      );
+    }
+    if (formats.includes('xlsx')) {
+      exports.xlsx.push(
+        await phase1Api.exportXlsx([result], outputDir, {
+          ...options.exportOptions,
+          fileName: `${buildOutputBaseName(sourceFile, 'xlsx')}.xlsx`,
+        }),
+      );
+    }
+    if (formats.includes('pdf')) {
+      exports.pdf.push(
+        await phase1Api.exportPdf([result], outputDir, {
+          ...options.exportOptions,
+          fileName: `${buildOutputBaseName(sourceFile, 'pdf')}.pdf`,
+        }),
+      );
+    }
   }
 
   return {
     type: 'pdf',
-    sourceFile: path.basename(filePath),
+    sourceFile,
     extracted: batch.results.length,
     failed: batch.errors.length,
     exports,
@@ -30,6 +55,7 @@ async function processSpreadsheetFile(fileName, inputDir, outputDir, options = {
     outputDir,
     logsDir: options.logsDir,
     formats: options.formats || ['csv', 'xlsx'],
+    appendFormatSuffix: true,
     overwrite: options.overwrite !== false,
     baseUrl: options.baseUrl || null,
   });
@@ -60,7 +86,11 @@ async function processInputFiles(inputDir, fileNames, options = {}) {
     try {
       if (type === 'pdf') {
         results.push(
-          await processPdfFile(filePath, outputDir, phase1Api, { overwrite, exportOptions: options.exportOptions }),
+          await processPdfFile(filePath, outputDir, phase1Api, {
+            overwrite,
+            exportOptions: options.exportOptions,
+            formats: options.formats,
+          }),
         );
       } else if (type === 'spreadsheet') {
         results.push(

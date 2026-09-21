@@ -162,6 +162,33 @@ describe('appServer', () => {
     expect(download.statusCode).toBe(200);
   });
 
+  test('POST /api/v1/files/batch-delete exclui todos os arquivos informados', async () => {
+    const response = await request(
+      `${server.url}/api/v1/files/batch-delete`,
+      { method: 'POST' },
+      { files: ['sample.json', 'doc.txt'] },
+    );
+
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(response.body)).toEqual({
+      deleted: expect.arrayContaining(['sample.json', 'doc.txt']),
+      count: 2,
+    });
+
+    const listed = await request(`${server.url}/api/v1/files`);
+    expect(JSON.parse(listed.body).files).toEqual([]);
+  });
+
+  test('POST /api/v1/files/batch-delete rejeita seleção vazia', async () => {
+    const response = await request(
+      `${server.url}/api/v1/files/batch-delete`,
+      { method: 'POST' },
+      { files: [] },
+    );
+
+    expect(response.statusCode).toBe(400);
+  });
+
   test('[F2-46] CRUD /api/v1/llm/models end-to-end com persistence memory', async () => {
     const created = await request(`${server.url}/api/v1/llm/models`, { method: 'POST' }, {
       name: 'Ollama Local',

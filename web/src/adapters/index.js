@@ -3,6 +3,7 @@ module.exports = {
   pdfParser: require('./pdfParserAdapter'),
   csvWriter: require('./csvWriterAdapter'),
   excelWriter: require('./excelWriterAdapter'),
+  pdfWriter: require('./pdfWriterAdapter'),
   tableParser: require('./tableParserAdapter'),
   crypto: require('./cryptoAdapter'),
   persistence: require('./persistenceAdapter'),

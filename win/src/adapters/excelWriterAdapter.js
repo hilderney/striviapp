@@ -29,6 +29,18 @@ const RESUMO_GRAND_COLOR_INDEX = 3;
 const FROZEN_HEADER_ROWS = 3;
 const COLUMN_WIDTHS = [14, 12, 12, 28, 14, 28, 16, 8, 14, 12, 14];
 
+const BORDER_BLACK = { argb: 'FF000000' };
+const BORDER_2PX = { style: 'medium', color: BORDER_BLACK };
+const BORDER_1PX = { style: 'thin', color: BORDER_BLACK };
+
+function boxBorder(edge) {
+  return { top: edge, left: edge, bottom: edge, right: edge };
+}
+
+function setBorderSides(cell, sides) {
+  cell.border = { ...(cell.border || {}), ...sides };
+}
+
 class ExcelWriterAdapter {
   async write(_filePath, _rows, _headers) {
     throw new Error('ExcelWriterAdapter.write() must be implemented');
@@ -88,6 +100,13 @@ class UnimedReportRenderer {
     this.resumoSectionEnd = null;
     this.resumoBlockStartRow = null;
     this.resumoBlockColorIndex = 0;
+    this.preambleRowIndexes = [];
+    this.columnHeaderRowIndexes = [];
+    this.listItemRowIndexes = [];
+    this.listTotalRowIndexes = [];
+    this.resumoSeparatorRowIndexes = [];
+    this.resumoBlocks = [];
+    this.currentResumoBlock = null;
   }
 
   render(sheetRows) {
@@ -97,6 +116,7 @@ class UnimedReportRenderer {
     }
 
     this.mergeResumoLabel();
+    this.applyBorders();
     this.freezeHeader();
     this.applyColumnWidths();
   }
@@ -107,8 +127,9 @@ class UnimedReportRenderer {
         return this.renderPreamble(sheetRow);
       case 'blank':
         return this.renderBlank();
+      case 'resumo-separator':
       case 'resumo-blank':
-        return this.renderResumoBlank();
+        return this.renderResumoSeparator();
       case 'resumo-executante-start':
       case 'resumo-grand-start':
         return this.renderResumoBlockStart(sheetRow);
@@ -146,16 +167,20 @@ class UnimedReportRenderer {
     cell.font = { bold: true, size: PREAMBLE_FONT_SIZE[style] ?? PREAMBLE_FONT_SIZE.header3 };
     cell.alignment = { vertical: 'middle', horizontal: 'left' };
     this.preambleIndex += 1;
+    this.preambleRowIndexes.push(this.rowIndex);
   }
 
   renderBlank() {
     this.addRow(emptyCells(COLUMN_COUNT));
   }
 
-  renderResumoBlank() {
-    this.openResumoSection();
+  renderResumoSeparator() {
     this.addRow(emptyCells(COLUMN_COUNT));
-    this.resumoSectionEnd = this.rowIndex;
+    this.resumoSeparatorRowIndexes.push(this.rowIndex);
+  }
+
+  renderResumoBlank() {
+    this.renderResumoSeparator();
   }
 
   renderResumoBlockStart(sheetRow) {
@@ -174,6 +199,14 @@ class UnimedReportRenderer {
     if (!isGrandTotal) {
       this.resumoBlockColorIndex += 1;
     }
+
+    this.currentResumoBlock = {
+      startRow: this.rowIndex,
+      headerRow: this.rowIndex,
+      dataRows: [],
+      totalRow: null,
+      endRow: this.rowIndex,
+    };
   }
 
   renderResumoData(sheetRow) {
@@ -181,6 +214,10 @@ class UnimedReportRenderer {
     setCurrencyCell(row.getCell(RESUMO_DATA_COL), row.getCell(RESUMO_DATA_COL).value);
     setIntegerCell(row.getCell(RESUMO_QUANTITY_COL), row.getCell(RESUMO_QUANTITY_COL).value);
     setCurrencyCell(row.getCell(RESUMO_TOTAL_COL), row.getCell(RESUMO_TOTAL_COL).value);
+    if (this.currentResumoBlock) {
+      this.currentResumoBlock.dataRows.push(this.rowIndex);
+      this.currentResumoBlock.endRow = this.rowIndex;
+    }
   }
 
   renderResumoTotal(sheetRow) {
@@ -193,6 +230,13 @@ class UnimedReportRenderer {
 
     this.closeResumoBlock();
 
+    if (this.currentResumoBlock) {
+      this.currentResumoBlock.totalRow = this.rowIndex;
+      this.currentResumoBlock.endRow = this.rowIndex;
+      this.resumoBlocks.push(this.currentResumoBlock);
+      this.currentResumoBlock = null;
+    }
+
     if (sheetRow.type === 'resumo-grand-total') {
       this.resumoSectionEnd = this.rowIndex;
     }
@@ -203,6 +247,15 @@ class UnimedReportRenderer {
 
     if (sheetRow.type === 'header') {
       row.font = { bold: true };
+      this.columnHeaderRowIndexes.push(this.rowIndex);
+    }
+
+    if (sheetRow.type === 'data') {
+      this.listItemRowIndexes.push(this.rowIndex);
+    }
+
+    if (['subtotal', 'grand-total'].includes(sheetRow.type)) {
+      this.listTotalRowIndexes.push(this.rowIndex);
     }
 
     if (['data', 'subtotal', 'grand-total'].includes(sheetRow.type)) {
@@ -260,7 +313,7 @@ class UnimedReportRenderer {
 
     this.worksheet.mergeCells(resumoSectionStart, 1, resumoSectionEnd, RESUMO_LEFT_COLSPAN);
     const label = this.worksheet.getCell(resumoSectionStart, 1);
-    label.value = 'RESUMO GERAL';
+    label.value = 'TOTAL GERAL';
     label.font = { bold: true, size: 12 };
     label.alignment = { vertical: 'middle', horizontal: 'center', textRotation: 90 };
   }
@@ -271,6 +324,191 @@ class UnimedReportRenderer {
 
   applyColumnWidths() {
     this.worksheet.columns = COLUMN_WIDTHS.map((width) => ({ width }));
+  }
+
+  applyBorders() {
+    const lastRow = this.rowIndex;
+    if (lastRow < 1) {
+      return;
+    }
+
+    this.applyPreambleOutline(BORDER_2PX);
+
+    for (const rowIndex of this.columnHeaderRowIndexes) {
+      this.applyRowCellBoxes(rowIndex, BORDER_2PX);
+    }
+
+    for (const rowIndex of this.listItemRowIndexes) {
+      this.applyRowCellBoxes(rowIndex, BORDER_1PX);
+    }
+
+    for (const rowIndex of this.listTotalRowIndexes) {
+      this.applyRowCellBoxes(rowIndex, BORDER_1PX);
+      this.applyMergedRowOutline(rowIndex, BORDER_2PX);
+    }
+
+    const listEndRow =
+      this.listTotalRowIndexes.length > 0
+        ? this.listTotalRowIndexes[this.listTotalRowIndexes.length - 1]
+        : lastRow;
+    this.applyDocumentOutline(listEndRow, BORDER_2PX);
+
+    for (const rowIndex of this.resumoSeparatorRowIndexes) {
+      this.clearRowBorders(rowIndex);
+    }
+
+    this.applyResumoBorders();
+  }
+
+  applyMergedRowOutline(rowIndex, edge) {
+    for (let col = 1; col <= COLUMN_COUNT; col += 1) {
+      const sides = { top: edge, bottom: edge };
+      if (col === 1) {
+        sides.left = edge;
+      }
+      if (col === COLUMN_COUNT) {
+        sides.right = edge;
+      }
+      setBorderSides(this.worksheet.getCell(rowIndex, col), sides);
+    }
+  }
+
+  applyPreambleOutline(edge) {
+    const firstRow = this.preambleRowIndexes[0];
+    const lastRow = this.preambleRowIndexes[this.preambleRowIndexes.length - 1];
+    if (!firstRow || !lastRow) {
+      return;
+    }
+
+    for (const rowIndex of this.preambleRowIndexes) {
+      for (let col = 1; col <= COLUMN_COUNT; col += 1) {
+        const sides = {};
+        if (rowIndex === firstRow) {
+          sides.top = edge;
+        }
+        if (rowIndex === lastRow) {
+          sides.bottom = edge;
+        }
+        if (col === 1) {
+          sides.left = edge;
+        }
+        if (col === COLUMN_COUNT) {
+          sides.right = edge;
+        }
+        setBorderSides(this.worksheet.getCell(rowIndex, col), sides);
+      }
+    }
+  }
+
+  applyRowCellBoxes(rowIndex, edge) {
+    const box = boxBorder(edge);
+    for (let col = 1; col <= COLUMN_COUNT; col += 1) {
+      setBorderSides(this.worksheet.getCell(rowIndex, col), box);
+    }
+  }
+
+  applyDocumentOutline(lastRow, edge) {
+    for (let row = 1; row <= lastRow; row += 1) {
+      for (let col = 1; col <= COLUMN_COUNT; col += 1) {
+        const sides = {};
+        if (row === 1) {
+          sides.top = edge;
+        }
+        if (row === lastRow) {
+          sides.bottom = edge;
+        }
+        if (col === 1) {
+          sides.left = edge;
+        }
+        if (col === COLUMN_COUNT) {
+          sides.right = edge;
+        }
+        if (Object.keys(sides).length > 0) {
+          setBorderSides(this.worksheet.getCell(row, col), sides);
+        }
+      }
+    }
+  }
+
+  clearRowBorders(rowIndex) {
+    for (let col = 1; col <= COLUMN_COUNT; col += 1) {
+      this.worksheet.getCell(rowIndex, col).border = {};
+    }
+  }
+
+  applyColRangeBoxes(rowIndex, startCol, endCol, edge) {
+    const box = boxBorder(edge);
+    for (let col = startCol; col <= endCol; col += 1) {
+      setBorderSides(this.worksheet.getCell(rowIndex, col), box);
+    }
+  }
+
+  applyColRangeOutline(rowIndex, startCol, endCol, edge) {
+    for (let col = startCol; col <= endCol; col += 1) {
+      const sides = { top: edge, bottom: edge };
+      if (col === startCol) {
+        sides.left = edge;
+      }
+      if (col === endCol) {
+        sides.right = edge;
+      }
+      setBorderSides(this.worksheet.getCell(rowIndex, col), sides);
+    }
+  }
+
+  applyRectOutline(startRow, startCol, endRow, endCol, edge) {
+    for (let row = startRow; row <= endRow; row += 1) {
+      for (let col = startCol; col <= endCol; col += 1) {
+        const sides = {};
+        if (row === startRow) {
+          sides.top = edge;
+        }
+        if (row === endRow) {
+          sides.bottom = edge;
+        }
+        if (col === startCol) {
+          sides.left = edge;
+        }
+        if (col === endCol) {
+          sides.right = edge;
+        }
+        if (Object.keys(sides).length > 0) {
+          setBorderSides(this.worksheet.getCell(row, col), sides);
+        }
+      }
+    }
+  }
+
+  applyResumoBorders() {
+    const { resumoSectionStart, resumoSectionEnd } = this;
+    if (!resumoSectionStart || !resumoSectionEnd || resumoSectionEnd < resumoSectionStart) {
+      return;
+    }
+
+    this.applyRectOutline(resumoSectionStart, 1, resumoSectionEnd, RESUMO_LEFT_COLSPAN, BORDER_2PX);
+    setBorderSides(this.worksheet.getCell(resumoSectionStart, 1), boxBorder(BORDER_2PX));
+
+    const nameEndCol = RESUMO_NAME_COL + RESUMO_NAME_COLSPAN - 1;
+    const dataStart = RESUMO_DATA_COL;
+    const dataEnd = RESUMO_TOTAL_COL;
+
+    for (const block of this.resumoBlocks) {
+      this.applyRectOutline(block.startRow, RESUMO_NAME_COL, block.endRow, nameEndCol, BORDER_2PX);
+      setBorderSides(this.worksheet.getCell(block.startRow, RESUMO_NAME_COL), boxBorder(BORDER_2PX));
+
+      const dataRows = [block.headerRow, ...block.dataRows];
+      if (block.totalRow) {
+        dataRows.push(block.totalRow);
+      }
+      for (const rowIndex of dataRows) {
+        this.applyColRangeBoxes(rowIndex, dataStart, dataEnd, BORDER_1PX);
+      }
+
+      this.applyColRangeOutline(block.headerRow, dataStart, dataEnd, BORDER_2PX);
+      if (block.totalRow) {
+        this.applyColRangeOutline(block.totalRow, dataStart, dataEnd, BORDER_2PX);
+      }
+    }
   }
 }
 

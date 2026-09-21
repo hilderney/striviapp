@@ -5,6 +5,7 @@ const { createSpreadsheetReaderAdapter } = require('../adapters/spreadsheetReade
 const { createTableParserAdapter } = require('../adapters/tableParserAdapter');
 const { createCsvWriterAdapter } = require('../adapters/csvWriterAdapter');
 const { createExcelWriterAdapter } = require('../adapters/excelWriterAdapter');
+const { createPdfWriterAdapter } = require('../adapters/pdfWriterAdapter');
 const { deriveSpreadsheetMetadata } = require('./spreadsheetMetadataParser');
 const { buildUnimedSpreadsheet } = require('./unimedSpreadsheetLayout');
 const { createLogger } = require('./logger');
@@ -102,7 +103,9 @@ async function importSpreadsheet(sourceFile, options = {}) {
     tableParserAdapter = createTableParserAdapter('unimed-planilha'),
     csvWriterAdapter = createCsvWriterAdapter(),
     excelWriterAdapter = createExcelWriterAdapter(),
+    pdfWriterAdapter = createPdfWriterAdapter(),
     baseUrl = null,
+    appendFormatSuffix = false,
   } = options;
 
   const inputPath = resolveInputPath(sourceFile, inputDir);
@@ -123,31 +126,52 @@ async function importSpreadsheet(sourceFile, options = {}) {
   const absoluteOutputDir = path.resolve(outputDir);
   await fs.mkdir(absoluteOutputDir, { recursive: true });
 
-  const exports = { csv: null, xlsx: null };
+  const exports = { csv: null, xlsx: null, pdf: null };
 
   if (formats.includes('csv')) {
-    const csvPath = path.join(absoluteOutputDir, `${outputBaseName}.csv`);
+    const csvFileName = appendFormatSuffix
+      ? `${buildOutputBaseName(path.basename(sourceFile), 'csv')}.csv`
+      : `${outputBaseName}.csv`;
+    const csvPath = path.join(absoluteOutputDir, csvFileName);
     await assertCanWrite(csvPath, overwrite);
     await csvWriterAdapter.writeSheet(csvPath, sheet.sheetRows);
     exports.csv = {
       filePath: csvPath,
       rowCount: sheet.dataRowCount,
-      url: baseUrl ? `${baseUrl}/open/${encodeURIComponent(`${outputBaseName}.csv`)}` : null,
+      url: baseUrl ? `${baseUrl}/open/${encodeURIComponent(csvFileName)}` : null,
     };
     logger.info('CSV exported', exports.csv);
   }
 
   const wantsExcel = formats.some((format) => ['xlsx', 'xls', 'excel'].includes(format));
   if (wantsExcel) {
-    const xlsxPath = path.join(absoluteOutputDir, `${outputBaseName}.xlsx`);
+    const xlsxFileName = appendFormatSuffix
+      ? `${buildOutputBaseName(path.basename(sourceFile), 'xlsx')}.xlsx`
+      : `${outputBaseName}.xlsx`;
+    const xlsxPath = path.join(absoluteOutputDir, xlsxFileName);
     await assertCanWrite(xlsxPath, overwrite);
     await excelWriterAdapter.writeSheet(xlsxPath, sheet.sheetRows);
     exports.xlsx = {
       filePath: xlsxPath,
       rowCount: sheet.dataRowCount,
-      url: baseUrl ? `${baseUrl}/open/${encodeURIComponent(`${outputBaseName}.xlsx`)}` : null,
+      url: baseUrl ? `${baseUrl}/open/${encodeURIComponent(xlsxFileName)}` : null,
     };
     logger.info('Excel exported', exports.xlsx);
+  }
+
+  if (formats.includes('pdf')) {
+    const pdfFileName = appendFormatSuffix
+      ? `${buildOutputBaseName(path.basename(sourceFile), 'pdf')}.pdf`
+      : `${outputBaseName}.pdf`;
+    const pdfPath = path.join(absoluteOutputDir, pdfFileName);
+    await assertCanWrite(pdfPath, overwrite);
+    await pdfWriterAdapter.writeSheet(pdfPath, sheet.sheetRows);
+    exports.pdf = {
+      filePath: pdfPath,
+      rowCount: sheet.dataRowCount,
+      url: baseUrl ? `${baseUrl}/open/${encodeURIComponent(pdfFileName)}` : null,
+    };
+    logger.info('PDF exported', exports.pdf);
   }
 
   const result = {

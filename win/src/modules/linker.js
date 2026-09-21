@@ -69,6 +69,31 @@ async function deleteOutputFile(outputDir, fileName) {
   }
 }
 
+async function batchDeleteOutputFiles(outputDir, fileNames) {
+  if (!Array.isArray(fileNames) || fileNames.length === 0) {
+    const error = new LinkerError('files array is required');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const uniqueNames = [...new Set(fileNames)];
+  for (const fileName of uniqueNames) {
+    if (typeof fileName !== 'string' || !isPathInside(outputDir, fileName)) {
+      const error = new LinkerError('Invalid file path');
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+
+  const deleted = [];
+  for (const fileName of uniqueNames) {
+    const result = await deleteOutputFile(outputDir, fileName);
+    deleted.push(result.name);
+  }
+
+  return { deleted, count: deleted.length };
+}
+
 function createRequestHandler(outputDir, baseUrl) {
   const absoluteOutputDir = path.resolve(outputDir);
   // baseUrl pode ser função: com porta efêmera (port: 0) a URL real só existe
@@ -171,4 +196,5 @@ module.exports = {
   getContentType,
   listOutputFiles,
   deleteOutputFile,
+  batchDeleteOutputFiles,
 };

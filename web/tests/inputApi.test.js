@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs/promises');
 const path = require('path');
+const { PDFDocument } = require('pdf-lib');
 const { createAppServer } = require('../src/modules/appServer');
 const { createPersistenceAdapter } = require('../src/adapters/persistenceAdapter');
 const { createCryptoAdapter } = require('../src/adapters/cryptoAdapter');
@@ -119,5 +120,34 @@ describe('inputApi', () => {
     });
     expect(response.statusCode).toBe(201);
     expect(JSON.parse(response.body).pdfCount).toBe(1);
+  });
+
+  test('POST /api/v1/input/run respeita formatos selecionados e aplica sufixo', async () => {
+    const xlsContent = await fs.readFile(FIXTURE_TSV);
+    const response = await request(`${server.url}/api/v1/input/run`, { method: 'POST' }, {
+      files: [{ name: 'demo.xls', data: xlsContent.toString('base64') }],
+      formats: ['csv'],
+    });
+
+    expect(response.statusCode).toBe(201);
+    const payload = JSON.parse(response.body);
+    expect(path.basename(payload.results[0].exports.csv.filePath)).toBe('demo_csv.csv');
+    expect(payload.results[0].exports.xlsx).toBeNull();
+  });
+
+  test('POST /api/v1/input/run gera somente PDF quando PDF está selecionado', async () => {
+    const xlsContent = await fs.readFile(FIXTURE_TSV);
+    const response = await request(`${server.url}/api/v1/input/run`, { method: 'POST' }, {
+      files: [{ name: 'demo.xls', data: xlsContent.toString('base64') }],
+      formats: ['pdf'],
+    });
+
+    expect(response.statusCode).toBe(201);
+    const payload = JSON.parse(response.body);
+    const exports = payload.results[0].exports;
+    expect(exports.csv).toBeNull();
+    expect(exports.xlsx).toBeNull();
+    expect(path.basename(exports.pdf.filePath)).toBe('demo_pdf.pdf');
+    expect((await PDFDocument.load(await fs.readFile(exports.pdf.filePath))).getPageCount()).toBeGreaterThan(0);
   });
 });

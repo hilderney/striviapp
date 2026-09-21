@@ -25,6 +25,10 @@ async function readWorksheet(filePath) {
   return workbook.worksheets[0];
 }
 
+function borderStyle(cell, side) {
+  return cell.border?.[side]?.style;
+}
+
 describe('exporter — CSV (layout Unimed)', () => {
   let outputDir;
 
@@ -246,6 +250,167 @@ describe('exporter — Excel (layout Unimed)', () => {
     expect(typeof dataRow.getCell(8).value).toBe('number');
     expect(resumoRateCell).toBeTruthy();
     expect(resumoRateCell.numFmt).toContain('R$');
+  });
+
+  test('[F8-36] XLSX deve ter contorno e cabeçalhos 2px e itens da lista 1px', async () => {
+    const { createExcelWriterAdapter } = require('../src/adapters/excelWriterAdapter');
+    const { buildUnimedSpreadsheet } = require('../src/modules/unimedSpreadsheetLayout');
+    const filePath = path.join(outputDir, 'borders.xlsx');
+
+    const sheet = buildUnimedSpreadsheet({
+      text: '',
+      rows: [
+        {
+          protocolo: '1',
+          guia: '2',
+          requisicao: '3',
+          beneficiario: 'PACIENTE',
+          dt_emis: '01/01/2026',
+          medico: 'BOTO COR DE ROSA ALVES',
+          codigo_procedimento: '50000470',
+          qt: '1',
+          vl_bruto: '45,54',
+          vl_glosa: '0',
+          vl_pago: '45,54',
+        },
+      ],
+      metadata: {
+        prestador: 'CONSULTORIO',
+        paymentLine: 'UNIMED - TESTE',
+      },
+    });
+
+    await createExcelWriterAdapter('exceljs').writeSheet(filePath, sheet.sheetRows);
+    const worksheet = await readWorksheet(filePath);
+    const lastCol = 11;
+
+    const preamble = worksheet.getRow(1).getCell(1);
+    expect(borderStyle(preamble, 'top')).toBe('medium');
+    expect(borderStyle(preamble, 'left')).toBe('medium');
+    expect(borderStyle(preamble, 'bottom')).toBeUndefined();
+    const secondPreamble = worksheet.getRow(2).getCell(1);
+    expect(borderStyle(secondPreamble, 'top')).toBeUndefined();
+    expect(borderStyle(secondPreamble, 'bottom')).toBe('medium');
+
+    const columnHeader = worksheet.getRow(3).getCell(2);
+    expect(borderStyle(columnHeader, 'top')).toBe('medium');
+    expect(borderStyle(columnHeader, 'left')).toBe('medium');
+    expect(borderStyle(columnHeader, 'right')).toBe('medium');
+    expect(borderStyle(columnHeader, 'bottom')).toBe('medium');
+
+    let dataRow = null;
+    worksheet.eachRow((row) => {
+      if (row.getCell(4).value === 'PACIENTE') {
+        dataRow = row;
+      }
+    });
+    expect(dataRow).toBeTruthy();
+    expect(borderStyle(dataRow.getCell(4), 'top')).toBe('thin');
+    expect(borderStyle(dataRow.getCell(4), 'right')).toBe('thin');
+    expect(borderStyle(dataRow.getCell(1), 'left')).toBe('medium');
+
+    expect(borderStyle(worksheet.getRow(1).getCell(lastCol), 'right')).toBe('medium');
+
+    let subtotalRow = null;
+    worksheet.eachRow((row) => {
+      const label = String(row.getCell(1).value || '');
+      if (label.startsWith('TOTAL - ')) {
+        subtotalRow = row;
+      }
+    });
+    expect(subtotalRow).toBeTruthy();
+    expect(borderStyle(subtotalRow.getCell(1), 'top')).toBe('medium');
+    expect(borderStyle(subtotalRow.getCell(1), 'bottom')).toBe('medium');
+    expect(borderStyle(subtotalRow.getCell(1), 'left')).toBe('medium');
+    expect(borderStyle(subtotalRow.getCell(lastCol), 'right')).toBe('medium');
+    expect(borderStyle(subtotalRow.getCell(7), 'left')).toBe('thin');
+    expect(borderStyle(subtotalRow.getCell(7), 'right')).toBe('thin');
+    expect(borderStyle(subtotalRow.getCell(7), 'top')).toBe('medium');
+
+    let grandTotalRow = null;
+    worksheet.eachRow((row) => {
+      if (
+        String(row.getCell(1).value || '') === 'TOTAL GERAL'
+        && row.getCell(1).alignment?.textRotation !== 90
+      ) {
+        grandTotalRow = row;
+      }
+    });
+    expect(grandTotalRow).toBeTruthy();
+    expect(borderStyle(grandTotalRow.getCell(1), 'top')).toBe('medium');
+    expect(borderStyle(grandTotalRow.getCell(1), 'bottom')).toBe('medium');
+    expect(borderStyle(grandTotalRow.getCell(1), 'left')).toBe('medium');
+    expect(borderStyle(grandTotalRow.getCell(lastCol), 'right')).toBe('medium');
+    expect(borderStyle(grandTotalRow.getCell(7), 'left')).toBe('thin');
+    expect(borderStyle(grandTotalRow.getCell(7), 'right')).toBe('thin');
+    expect(borderStyle(grandTotalRow.getCell(7), 'top')).toBe('medium');
+    expect(borderStyle(grandTotalRow.getCell(lastCol), 'bottom')).toBe('medium');
+    expect(borderStyle(grandTotalRow.getCell(lastCol), 'right')).toBe('medium');
+
+    let resumoLabelRow = null;
+    worksheet.eachRow((row) => {
+      if (
+        !resumoLabelRow
+        && row.getCell(1).value === 'TOTAL GERAL'
+        && row.getCell(1).alignment?.textRotation === 90
+      ) {
+        resumoLabelRow = row;
+      }
+    });
+    expect(resumoLabelRow).toBeTruthy();
+    expect(borderStyle(resumoLabelRow.getCell(1), 'top')).toBe('medium');
+    expect(borderStyle(resumoLabelRow.getCell(1), 'bottom')).toBe('medium');
+    expect(borderStyle(resumoLabelRow.getCell(1), 'left')).toBe('medium');
+    expect(borderStyle(resumoLabelRow.getCell(1), 'right')).toBe('medium');
+
+    const separatorRow = worksheet.getRow(resumoLabelRow.number - 1);
+    expect(borderStyle(separatorRow.getCell(1), 'top')).toBeUndefined();
+    expect(borderStyle(separatorRow.getCell(1), 'bottom')).toBeUndefined();
+    expect(borderStyle(separatorRow.getCell(1), 'left')).toBeUndefined();
+    expect(borderStyle(separatorRow.getCell(1), 'right')).toBeUndefined();
+    expect(borderStyle(separatorRow.getCell(6), 'left')).toBeUndefined();
+    expect(borderStyle(separatorRow.getCell(11), 'right')).toBeUndefined();
+
+    const nameCell = resumoLabelRow.getCell(6);
+    expect(borderStyle(nameCell, 'top')).toBe('medium');
+    expect(borderStyle(nameCell, 'left')).toBe('medium');
+    expect(borderStyle(nameCell, 'right')).toBe('medium');
+
+    const headerRate = resumoLabelRow.getCell(9);
+    expect(headerRate.value).toBe('VR.SESSÕES');
+    expect(borderStyle(headerRate, 'top')).toBe('medium');
+    expect(borderStyle(headerRate, 'left')).toBe('medium');
+    expect(borderStyle(resumoLabelRow.getCell(10), 'left')).toBe('thin');
+
+    const firstDataRow = worksheet.getRow(resumoLabelRow.number + 1);
+    expect(borderStyle(firstDataRow.getCell(9), 'top')).toBe('thin');
+    expect(borderStyle(firstDataRow.getCell(9), 'left')).toBe('thin');
+
+    let resumoBlockTotal = null;
+    worksheet.eachRow((row) => {
+      if (String(row.getCell(9).value || '').startsWith('TOTAL - ')) {
+        resumoBlockTotal = row;
+      }
+    });
+    expect(resumoBlockTotal).toBeTruthy();
+    expect(borderStyle(resumoBlockTotal.getCell(9), 'top')).toBe('medium');
+    expect(borderStyle(resumoBlockTotal.getCell(9), 'bottom')).toBe('medium');
+    expect(borderStyle(resumoBlockTotal.getCell(9), 'left')).toBe('medium');
+    expect(borderStyle(resumoBlockTotal.getCell(10), 'left')).toBe('thin');
+    expect(borderStyle(resumoBlockTotal.getCell(11), 'right')).toBe('medium');
+
+    let resumoGrandTotal = null;
+    worksheet.eachRow((row) => {
+      if (row.getCell(9).value === 'TOTAL') {
+        resumoGrandTotal = row;
+      }
+    });
+    expect(resumoGrandTotal).toBeTruthy();
+    expect(borderStyle(resumoGrandTotal.getCell(9), 'top')).toBe('medium');
+    expect(borderStyle(resumoGrandTotal.getCell(9), 'bottom')).toBe('medium');
+    expect(borderStyle(resumoGrandTotal.getCell(9), 'left')).toBe('medium');
+    expect(borderStyle(resumoGrandTotal.getCell(10), 'left')).toBe('thin');
+    expect(borderStyle(resumoGrandTotal.getCell(11), 'right')).toBe('medium');
   });
 
   test('[RED-26] cada linha exportada deve conter dados mapeados sem source_pdf', async () => {

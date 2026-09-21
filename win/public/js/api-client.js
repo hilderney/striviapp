@@ -174,6 +174,10 @@ const api = {
     return this.request(`/api/v1/files/${encodeURIComponent(filename)}`, { method: 'DELETE' });
   },
 
+  batchDeleteFiles(files) {
+    return this.request('/api/v1/files/batch-delete', { method: 'POST' }, { files });
+  },
+
   fsRoots() {
     return this.request('/api/v1/fs/roots');
   },
@@ -200,12 +204,12 @@ const api = {
     });
   },
 
-  inputRun(files, processNames = null) {
+  inputRun(files, processNames = null, formats = ['xlsx']) {
     return this.request('/api/v1/input/run', { method: 'POST' }, {
       files,
       processNames,
       overwrite: true,
-      formats: ['csv', 'xlsx'],
+      formats,
     });
   },
 

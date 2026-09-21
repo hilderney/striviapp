@@ -628,13 +628,81 @@ a { color: var(--accent); }
   margin-bottom: 1rem;
 }
 
-.selected-files-table {
-  margin-bottom: 1.5rem;
+.empty-table-message {
+  padding: 1.25rem;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: rgba(139, 156, 179, 0.04);
+}
+
+#selected-files-table,
+#output-files-table {
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  margin: 0.75rem 0 1rem;
+}
+
+#selected-files-table thead th,
+#output-files-table thead th {
+  padding: 0.8rem 0.75rem;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(59, 130, 246, 0.13);
+  border-top: 1px solid rgba(96, 165, 250, 0.42);
+  border-bottom: 1px solid rgba(96, 165, 250, 0.42);
+}
+
+#selected-files-table thead th:first-child,
+#output-files-table thead th:first-child {
+  border-left: 1px solid rgba(96, 165, 250, 0.42);
+  border-radius: 8px 0 0 8px;
+}
+
+#selected-files-table thead th:last-child,
+#output-files-table thead th:last-child {
+  border-right: 1px solid rgba(96, 165, 250, 0.42);
+  border-radius: 0 8px 8px 0;
+}
+
+#selected-files-table tbody td,
+#output-files-table tbody td {
+  padding: 0.8rem 0.75rem;
+  background: rgba(30, 41, 59, 0.56);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+#selected-files-table tbody td:first-child,
+#output-files-table tbody td:first-child {
+  border-left: 1px solid var(--border);
+  border-radius: 8px 0 0 8px;
+}
+
+#selected-files-table tbody td:last-child,
+#output-files-table tbody td:last-child {
+  border-right: 1px solid var(--border);
+  border-radius: 0 8px 8px 0;
+}
+
+#selected-files-table tbody tr:hover td,
+#output-files-table tbody tr:hover td {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(96, 165, 250, 0.45);
 }
 
 .col-check {
   width: 2.5rem;
   text-align: center;
+}
+
+.col-remove {
+  width: 7rem;
+  text-align: right;
 }
 
 .type-badge {
@@ -656,6 +724,23 @@ a { color: var(--accent); }
   background: rgba(34, 197, 94, 0.16);
 }
 
+.type-xlsx {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.type-csv {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.16);
+}
+
+.type-doc,
+.type-txt,
+.type-arquivo {
+  color: var(--muted);
+  background: rgba(139, 156, 179, 0.12);
+}
+
 .btn-link {
   background: transparent;
   border: none;
@@ -669,6 +754,113 @@ a { color: var(--accent); }
   background: transparent;
 }
 
-#selection-summary.success {
-  color: var(--success);
+.btn-remove-all {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.btn-remove-all:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.output-format-selector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin: 0 0 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.selected-files-footer {
+  display: table-footer-group;
+}
+
+.selected-files-footer[hidden],
+.generated-files-section[hidden] {
+  display: none;
+}
+
+.selected-files-footer td {
+  padding: 0.75rem 0 0;
+  border: none;
+}
+
+.selected-files-footer-content {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.selected-files-footer .output-format-selector {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+  background: rgba(30, 41, 59, 0.4);
+}
+
+#selected-files-count {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.process-files-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+}
+
+.generated-files-section {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.output-format-selector legend {
+  padding: 0 0.35rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.output-format-selector label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.format-unavailable {
+  color: var(--muted);
+}
+
+.format-unavailable span {
+  font-size: 0.75rem;
+}
+
+.output-files-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.output-files-filters label {
+  margin: 0;
+}
+
+.output-files-filters input {
+  min-width: min(320px, 70vw);
+}
+
+.output-batch-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }

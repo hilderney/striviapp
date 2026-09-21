@@ -1,5 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
+const { PDFDocument } = require('pdf-lib');
 const { importSpreadsheet } = require('../src/modules/spreadsheetImporter');
 const { ExportError } = require('../src/errors');
 const { createTempDir } = require('./helpers/fixtures');
@@ -47,6 +48,17 @@ describe('spreadsheetImporter', () => {
     const result = await importFixture(['xlsx']);
     expect(result.exports.xlsx.filePath).toMatch(/unimed-demonstrativo_sheet\.xlsx$/);
 
+  });
+
+  test('deve importar fixture TSV e gerar PDF válido quando selecionado', async () => {
+    const result = await importFixture(['pdf']);
+    expect(result.exports.csv).toBeNull();
+    expect(result.exports.xlsx).toBeNull();
+    expect(result.exports.pdf.filePath).toMatch(/unimed-demonstrativo_sheet\.pdf$/);
+
+    const bytes = await fs.readFile(result.exports.pdf.filePath);
+    const document = await PDFDocument.load(bytes);
+    expect(document.getPageCount()).toBeGreaterThan(0);
   });
 
   test('[F3-31] linha 1 do CSV deve conter prestador derivado', async () => {

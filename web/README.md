@@ -8,8 +8,8 @@
 
 | Capacidade | Detalhe |
 |------------|---------|
-| **Extra├º├úo de PDF** | Scan ÔåÆ texto ÔåÆ `.csv` / `.xlsx` com layout Unimed |
-| **Leitura de planilhas** | `.xlsx`, `.xls` (TSV latin-1), `.csv`, `.tsv` ÔÇö mesmo layout de sa├¡da |
+| **Extração de PDF** | Scan → texto → `.xlsx` / `.csv` / `.pdf` (pdf planned) no layout escolhido |
+| **Leitura de planilhas** | `.xlsx`, `.xls` (TSV latin-1), `.csv`, `.tsv` — mesmo registry de saída |
 | **Processamento LLM** | Envia arquivos para Ollama (local) ou OpenRouter; resposta JSON + resumo |
 | **Interface web** | SPA leve (HTML + JS vanilla) com 4 abas, drag-and-drop e file-browser |
 | **Autentica├º├úo** | JWT access + refresh rotacionado + eleva├º├úo TOTP por opera├º├úo |
@@ -80,21 +80,23 @@ PDF ÔöÇÔöÇÔû║ scanner ÔöÇÔöÇÔû║ extractor (.txt)
                           Ôöé
                     tableParser (linhas de tabela)
                           Ôöé
-                    exporter ÔöÇÔöÇÔû║ .csv  /  .xlsx (layout unimed-report)
+                    exporter → .xlsx / .csv / .pdf (layout unimed-report; pdf planned)
 ```
 
-O layout `unimed-report` inclui:
+O layout `unimed-report` (default do registry; spec 03) inclui:
 
 - Linha 1: nome do prestador
-- Linha 2: `UNIMED ÔÇö 1┬║ PGTO PROGRAMADO PARA {data} ÔÇª PRODU├ç├âO: {in├¡cio} A {fim}`
-- Linha 3: cabe├ºalho com 12 colunas (`Requisi├º├úo`, `Protocolo`, `Guia`, `Benefici├írio`, `Atendimento`, `Executante`, `Servi├ºo`, `Qt`, `Item`, `Vl Bruto`, `Vl Glosa`, `Vl Pago`)
-- Dados ordenados por Executante ÔåÆ Benefici├írio
+- Linha 2: `UNIMED — 1º PGTO PROGRAMADO PARA {data} … PRODUÇÃO: {início} A {fim}`
+- Linha 3: cabeçalho com 11 colunas (`Requisição`, `Protocolo`, `Guia`, `Beneficiário`, `Atendimento`, `Executante`, `Serviço`, `Qt`, `Vl Bruto`, `Vl Glosa`, `Vl Pago`) — sem coluna `Item`
+- Dados ordenados por Executante → Beneficiário
 - Subtotal por Executante (`TOTAL - {NOME}`) e `TOTAL GERAL`
-- **RESUMO GERAL** por valor de sess├úo com `VR.SESS├òES`, `QUANT.` e `TOTAL`
+- **RESUMO GERAL** por valor de sessão com `VR.SESSÕES`, `QUANT.` e `TOTAL`
+- XLSX com apresentação (cores, fontes, bordas, freeze); CSV só conteúdo; PDF de saída planned (ADR-022)
+- Segundo padrão planned: `unimed-financial-resume` (spec 24). O usuário escolhe container (`xlsx`, `csv`, `pdf`) e padrão na aba Arquivos.
 
 ### Planilhas (`.xlsx` / `.xls` TSV / `.csv`)
 
-Lidas pelo `spreadsheetReaderAdapter`, mapeadas pelo parser `unimed-planilha` e exportadas com o **mesmo layout** do PDF ÔÇö incluindo valores monet├írios reais (`Vl Bruto`, `Vl Glosa`, `Vl Pago`), que no fluxo PDF ficam como placeholders.
+Lidas pelo `spreadsheetReaderAdapter`, mapeadas pelo parser `unimed-planilha` e exportadas no layout pedido (default `unimed-report`) — incluindo valores monetários reais (`Vl Bruto`, `Vl Glosa`, `Vl Pago`), que no fluxo PDF ficam como placeholders.
 
 ---
 
@@ -355,7 +357,7 @@ const { results, errors } = await extractBatch(['a.pdf', 'b.pdf'], './output');
 // Exportar (layout unimed-report)
 const csv  = await exportCsv([result], './output');
 const xlsx = await exportXlsx([result], './output');
-// { filePath, rowCount, sourcePdf }
+// { filePath, rowCount, sourcePdf, format: 'unimed-report' }
 ```
 
 ---

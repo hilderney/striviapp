@@ -196,13 +196,10 @@ function buildResumoGeralSheetRows(normalizedRows) {
   }
 
   const { executantes, grandTotal } = buildResumoBlocks(normalizedRows);
-  const sheetRows = [
-    { type: 'resumo-blank', cells: ['RESUMO GERAL'] },
-  ];
+  const sheetRows = [{ type: 'resumo-separator', cells: ['RESUMO GERAL'] }];
 
   for (const block of executantes) {
     sheetRows.push(...buildExecutanteResumoRows(block));
-    sheetRows.push(buildBlankResumoRow());
   }
 
   sheetRows.push({
@@ -226,7 +223,6 @@ function buildResumoGeralSheetRows(normalizedRows) {
     type: 'resumo-grand-total',
     cells: ['TOTAL', String(grandTotal.totalQuantity), grandTotal.totalLabel],
   });
-  sheetRows.push(buildBlankResumoRow());
 
   return sheetRows;
 }

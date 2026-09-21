@@ -3,7 +3,12 @@ const fs = require('fs/promises');
 const path = require('path');
 const { LinkerError } = require('../errors');
 const { isPathInside } = require('../utils/paths');
-const { listOutputFiles, getContentType, deleteOutputFile } = require('./linker');
+const {
+  listOutputFiles,
+  getContentType,
+  deleteOutputFile,
+  batchDeleteOutputFiles,
+} = require('./linker');
 const { getRoots, browse } = require('./fsBrowser');
 const { stagePdfFiles, stageInputFiles } = require('./stagingUpload');
 const { processInputFiles } = require('./inputProcessService');
@@ -184,6 +189,17 @@ async function handleDeleteFile(ctx, res, requestedName, auth) {
   }
 }
 
+async function handleBatchDeleteFiles(ctx, req, res, auth) {
+  const body = await readJsonBody(req);
+  const { outputDir } = resolveUserWorkspace(ctx, auth);
+  try {
+    const result = await batchDeleteOutputFiles(outputDir, body.files);
+    return sendJson(res, 200, result);
+  } catch (error) {
+    return sendJson(res, error.statusCode || 500, { error: error.message });
+  }
+}
+
 async function handleFsBrowse(res, url) {
   const targetPath = url.searchParams.get('path');
   if (!targetPath) {
@@ -233,6 +249,7 @@ async function handleInputProcess(ctx, req, res, auth) {
     phase1Api: ctx.phase1Api,
     baseUrl: ctx.baseUrl,
     overwrite: body.overwrite !== false,
+    formats: body.formats || DEFAULT_FORMATS,
   });
   return sendJson(res, 200, summary);
 }
@@ -255,6 +272,7 @@ async function handleInputRun(ctx, req, res, auth) {
     phase1Api: ctx.phase1Api,
     baseUrl: ctx.baseUrl,
     overwrite: body.overwrite !== false,
+    formats: body.formats || DEFAULT_FORMATS,
   });
 
   return sendJson(res, 201, { ...summary, staged });
@@ -599,6 +617,10 @@ function routeRequest(ctx, req, res, url, auth) {
   if (isGet && pathname === '/api/v1/files') {
     const { outputDir } = resolveUserWorkspace(ctx, auth);
     return listOutputFiles(outputDir, ctx.baseUrl).then((files) => sendJson(res, 200, { files }));
+  }
+
+  if (isPost && pathname === '/api/v1/files/batch-delete') {
+    return handleBatchDeleteFiles(ctx, req, res, auth);
   }
 
   const deleteFileMatch = pathname.match(/^\/api\/v1\/files\/(.+)$/);

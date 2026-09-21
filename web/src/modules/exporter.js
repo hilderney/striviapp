@@ -2,6 +2,7 @@ const path = require('path');
 const { ExportError } = require('../errors');
 const { createCsvWriterAdapter } = require('../adapters/csvWriterAdapter');
 const { createExcelWriterAdapter } = require('../adapters/excelWriterAdapter');
+const { createPdfWriterAdapter } = require('../adapters/pdfWriterAdapter');
 const {
   createTableParserAdapter,
   TABLE_EXPORT_HEADERS,
@@ -212,9 +213,18 @@ function exportXlsx(results, outputDir, options = {}) {
   });
 }
 
+function exportPdf(results, outputDir, options = {}) {
+  return writeExport(results, outputDir, options, {
+    extension: 'pdf',
+    writer: options.pdfWriterAdapter || createPdfWriterAdapter(),
+    errorLabel: 'Failed to write PDF',
+  });
+}
+
 module.exports = {
   exportCsv,
   exportXlsx,
+  exportPdf,
   resolveExportRows,
   resolveUnimedSheet,
   resolveExportFormat,

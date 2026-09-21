@@ -96,7 +96,7 @@ describe('unimedResumoGeral', () => {
     const sheetRows = buildResumoGeralSheetRows(rows);
     const content = sheetRows.map((row) => row.cells.join('\t')).join('\n');
 
-    expect(sheetRows[0].type).toBe('resumo-blank');
+    expect(sheetRows[0].type).toBe('resumo-separator');
     expect(content).toContain('RESUMO GERAL');
     expect(content).toContain('B O T O');
     expect(content).toContain('C O R U J A');

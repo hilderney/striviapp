@@ -10,6 +10,7 @@
   const pendingFiles = new Map();
   let nextFileId = 0;
   let isProcessing = false;
+  let outputFiles = [];
 
   function logInput(message, isError = false) {
     const el = document.getElementById('files-log');
@@ -67,35 +68,72 @@
     return [...pendingFiles.values()].filter((entry) => entry.selected).map((entry) => entry.file);
   }
 
+  function updateSelectedFilesCount() {
+    const count = document.getElementById('selected-files-count');
+    const footer = document.getElementById('selected-files-footer');
+    const processBtn = document.getElementById('btn-process-selected');
+    const files = getSelectedPendingFiles();
+    const total = pendingFiles.size;
+    const pdfs = files.filter((file) => utils.getInputFileType(file) === 'pdf').length;
+    const sheets = files.length - pdfs;
+    if (count) {
+      count.textContent =
+        total === 0
+          ? '- Nenhum arquivo selecionado'
+          : `- ${files.length} de ${total} arquivo(s) marcado(s) — ${pdfs} PDF, ${sheets} planilha(s)`;
+    }
+    if (footer) {
+      footer.hidden = total === 0;
+    }
+
+    if (processBtn) {
+      processBtn.disabled = isProcessing || files.length === 0 || getSelectedOutputFormats().length === 0;
+    }
+  }
+
   function setProcessingState(active) {
     isProcessing = active;
     const btn = document.getElementById('btn-process-selected');
     const pickBtn = document.getElementById('btn-pick-files');
     const clearBtn = document.getElementById('btn-clear-files');
+    const removeAllBtn = document.getElementById('btn-remove-all-files');
     const dropZone = document.getElementById('file-drop-zone');
 
     if (btn) {
       btn.disabled = active;
-      btn.textContent = active ? 'Processando...' : 'Processar selecionados';
+      btn.textContent = active ? 'Processando...' : 'Processar Arquivos';
     }
     if (pickBtn) pickBtn.disabled = active;
     if (clearBtn) clearBtn.disabled = active;
+    if (removeAllBtn) removeAllBtn.disabled = active || pendingFiles.size === 0;
+    document.querySelectorAll('[data-available-format]').forEach((checkbox) => {
+      checkbox.disabled = active;
+    });
     if (dropZone) dropZone.classList.toggle('drop-zone--uploading', active);
+    updateSelectedFilesCount();
   }
 
   function renderPendingFiles() {
     const tbody = document.querySelector('#selected-files-table tbody');
     const selectAll = document.getElementById('select-all-files');
+    const removeAllBtn = document.getElementById('btn-remove-all-files');
     if (!tbody || !selectAll) return;
 
     tbody.innerHTML = '';
 
     const entries = [...pendingFiles.values()];
+    if (removeAllBtn) {
+      removeAllBtn.disabled = isProcessing || entries.length === 0;
+    }
     if (entries.length === 0) {
       selectAll.checked = false;
       selectAll.indeterminate = false;
-      document.getElementById('selection-summary').textContent =
-        'Nenhum arquivo selecionado. Arraste arquivos ou use o botão abaixo.';
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td colspan="5" class="empty-table-message">Nenhum arquivo carregado</td>';
+      tbody.appendChild(tr);
+      updateSelectionSummary();
+      updateSelectAllState();
       return;
     }
 
@@ -132,17 +170,7 @@
   }
 
   function updateSelectionSummary() {
-    const total = pendingFiles.size;
-    const selected = getSelectedPendingFiles().length;
-    const pdfs = getSelectedPendingFiles().filter((f) => utils.getInputFileType(f) === 'pdf').length;
-    const sheets = selected - pdfs;
-    const el = document.getElementById('selection-summary');
-    if (!el) return;
-    el.textContent =
-      total === 0
-        ? 'Nenhum arquivo selecionado.'
-        : `${selected} de ${total} arquivo(s) marcado(s) — ${pdfs} PDF, ${sheets} planilha(s)`;
-    el.className = selected > 0 ? 'hint success' : 'hint';
+    updateSelectedFilesCount();
   }
 
   function updateSelectAllState() {
@@ -176,8 +204,6 @@
       .join('<hr>');
   }
 
-  const ICON_OPEN =
-    '<svg class="file-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
   const ICON_DOWNLOAD =
     '<svg class="file-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
   const ICON_DELETE =
@@ -205,7 +231,7 @@
     }
   }
 
-  function confirmDeleteFile(fileName) {
+  function confirmDeleteFile(fileName, customMessage = null) {
     const modal = document.getElementById('confirm-delete-modal');
     const message = document.getElementById('confirm-delete-message');
     const confirmBtn = document.getElementById('confirm-delete-btn');
@@ -218,7 +244,7 @@
       confirmDeleteResolver = null;
     }
 
-    message.textContent = `Deseja excluir o arquivo "${fileName}"?`;
+    message.textContent = customMessage || `Deseja excluir o arquivo "${fileName}"?`;
     modal.hidden = false;
     modal.classList.remove('hidden');
     document.removeEventListener('keydown', onConfirmDeleteKeydown);
@@ -249,43 +275,136 @@
     });
   }
 
-  async function refreshOutputFilesTable() {
-    const tbody = document.querySelector('#output-files-table tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
+  function getSelectedOutputFormats() {
+    return [...document.querySelectorAll('input[name="output-format"]:checked:not(:disabled)')].map(
+      (checkbox) => checkbox.value,
+    );
+  }
+
+  function getOutputFileType(fileName) {
+    const match = String(fileName || '').toLowerCase().match(/\.([a-z0-9]+)$/);
+    const extension = match?.[1] || '';
+    if (extension === 'docx') return 'doc';
+    return ['xlsx', 'csv', 'pdf', 'doc', 'txt'].includes(extension) ? extension : 'arquivo';
+  }
+
+  function getVisibleOutputFiles() {
+    const nameFilter = String(document.getElementById('output-file-name-filter')?.value || '')
+      .trim()
+      .toLocaleLowerCase('pt-BR');
+    const typeFilter = String(document.getElementById('output-file-type-filter')?.value || '')
+      .toLowerCase();
+
+    return outputFiles.filter((file) => {
+      const type = getOutputFileType(file.name);
+      const matchesName = !nameFilter || file.name.toLocaleLowerCase('pt-BR').includes(nameFilter);
+      const matchesType = !typeFilter || type === typeFilter;
+      return matchesName && matchesType;
+    });
+  }
+
+  function updateOutputBatchActions(visibleFiles = getVisibleOutputFiles()) {
+    const states = {
+      'btn-delete-all-output': visibleFiles.length === 0,
+      'btn-download-all-output': visibleFiles.length === 0,
+    };
+    for (const [id, disabled] of Object.entries(states)) {
+      const button = document.getElementById(id);
+      if (button) button.disabled = disabled;
+    }
+  }
+
+  function downloadOutputFiles(files) {
+    files.forEach((file, index) => {
+      window.setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = api.withAuthQuery(file.url);
+        link.download = file.name;
+        link.hidden = true;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }, index * 150);
+    });
+    logInput(`${files.length} arquivo(s) enviado(s) para download.`);
+  }
+
+  async function deleteOutputFiles(files, scopeLabel) {
+    if (files.length === 0) return;
+    const confirmed = await confirmDeleteFile(
+      '',
+      `Deseja excluir ${scopeLabel} (${files.length} arquivo(s))? Esta ação não pode ser desfeita.`,
+    );
+    if (!confirmed) return;
 
     try {
+      await api.batchDeleteFiles(files.map((file) => file.name));
+      logInput(`${files.length} arquivo(s) excluído(s).`);
+      await refreshOutputFilesTable();
+      window.dispatchEvent(new CustomEvent('files-updated'));
+    } catch (error) {
+      logInput(error.message || 'Falha ao excluir arquivos.', true);
+    }
+  }
+
+  function renderOutputFilesTable() {
+    const tbody = document.querySelector('#output-files-table tbody');
+    const generatedFilesSection = document.getElementById('generated-files-section');
+    if (!tbody) return;
+    if (generatedFilesSection) {
+      generatedFilesSection.hidden = outputFiles.length === 0;
+    }
+    tbody.innerHTML = '';
+
+    const visibleFiles = getVisibleOutputFiles();
+
+    if (visibleFiles.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="3" class="hint">Nenhum arquivo encontrado.</td>';
+      tbody.appendChild(tr);
+      updateOutputBatchActions(visibleFiles);
+      return;
+    }
+
+    for (const file of visibleFiles) {
+      const type = getOutputFileType(file.name);
+      const tr = document.createElement('tr');
+      const safeName = utils.escapeHtml(file.name);
+      const authorizedUrl = api.withAuthQuery(file.url);
+      tr.innerHTML = `
+      <td>${safeName}</td>
+      <td><span class="type-badge type-${type}">${type === 'arquivo' ? 'Arquivo' : type.toUpperCase()}</span></td>
+      <td>
+        <div class="file-actions">
+          <a class="file-action file-download" href="${authorizedUrl}" download="${safeName}">${ICON_DOWNLOAD}<span>Baixar</span></a>
+          <button type="button" class="file-action file-delete" data-delete-file="${safeName}">${ICON_DELETE}<span>Excluir</span></button>
+        </div>
+      </td>`;
+
+      const deleteBtn = tr.querySelector('[data-delete-file]');
+      deleteBtn.addEventListener('click', async () => {
+        const confirmed = await confirmDeleteFile(file.name);
+        if (!confirmed) return;
+        try {
+          await api.deleteFile(file.name);
+          logInput(`Arquivo excluído: ${file.name}`);
+          await refreshOutputFilesTable();
+          window.dispatchEvent(new CustomEvent('files-updated'));
+        } catch (error) {
+          logInput(error.message || 'Falha ao excluir arquivo.', true);
+        }
+      });
+
+      tbody.appendChild(tr);
+    }
+    updateOutputBatchActions(visibleFiles);
+  }
+
+  async function refreshOutputFilesTable() {
+    try {
       const { files } = await api.listFiles();
-      for (const file of files) {
-        const tr = document.createElement('tr');
-        const safeName = utils.escapeHtml(file.name);
-        const authorizedUrl = api.withAuthQuery(file.url);
-        tr.innerHTML = `
-        <td>${safeName}</td>
-        <td>
-          <div class="file-actions">
-            <a class="file-action" href="${authorizedUrl}" target="_blank" rel="noopener">${ICON_OPEN}<span>Abrir</span></a>
-            <a class="file-action file-download" href="${authorizedUrl}" download="${safeName}">${ICON_DOWNLOAD}<span>Download</span></a>
-            <button type="button" class="file-action file-delete" data-delete-file="${safeName}">${ICON_DELETE}<span>Excluir</span></button>
-          </div>
-        </td>`;
-
-        const deleteBtn = tr.querySelector('[data-delete-file]');
-        deleteBtn.addEventListener('click', async () => {
-          const confirmed = await confirmDeleteFile(file.name);
-          if (!confirmed) return;
-          try {
-            await api.deleteFile(file.name);
-            logInput(`Arquivo excluído: ${file.name}`);
-            await refreshOutputFilesTable();
-            window.dispatchEvent(new CustomEvent('files-updated'));
-          } catch (error) {
-            logInput(error.message || 'Falha ao excluir arquivo.', true);
-          }
-        });
-
-        tbody.appendChild(tr);
-      }
+      outputFiles = files || [];
+      renderOutputFilesTable();
     } catch (error) {
       logInput(error.message, true);
     }
@@ -300,9 +419,13 @@
     if (selected.length === 0) {
       throw new Error('Marque ao menos um arquivo para processar.');
     }
+    const formats = getSelectedOutputFormats();
+    if (formats.length === 0) {
+      throw new Error('Selecione ao menos um tipo de saída: XLSX, CSV ou PDF.');
+    }
 
     setProcessingState(true);
-    logInput(`Preparando ${selected.length} arquivo(s)...`);
+    logInput(`Preparando ${selected.length} arquivo(s) para ${formats.join(', ').toUpperCase()}...`);
 
     try {
       const payloadFiles = [];
@@ -313,7 +436,7 @@
       }
 
       logInput('Enviando e processando no servidor...');
-      const summary = await api.inputRun(payloadFiles);
+      const summary = await api.inputRun(payloadFiles, null, formats);
 
       logInput(`Concluído: ${summary.processed} processado(s), ${summary.failed} falha(s).`);
 
@@ -350,8 +473,20 @@
     const fileInput = document.getElementById('file-input');
     const dropZone = document.getElementById('file-drop-zone');
     const selectAll = document.getElementById('select-all-files');
+    const outputNameFilter = document.getElementById('output-file-name-filter');
+    const outputTypeFilter = document.getElementById('output-file-type-filter');
+    const deleteAllOutput = document.getElementById('btn-delete-all-output');
+    const downloadAllOutput = document.getElementById('btn-download-all-output');
 
-    if (!fileInput || !dropZone || !selectAll) {
+    if (
+      !fileInput
+      || !dropZone
+      || !selectAll
+      || !outputNameFilter
+      || !outputTypeFilter
+      || !deleteAllOutput
+      || !downloadAllOutput
+    ) {
       console.error('Elementos da UI de arquivos não encontrados no DOM.');
       return;
     }
@@ -387,6 +522,25 @@
       logInput('Seleção limpa.');
     });
 
+    const removeAllBtn = document.getElementById('btn-remove-all-files');
+    if (removeAllBtn) {
+      removeAllBtn.addEventListener('click', () => {
+        const removedCount = pendingFiles.size;
+        clearPendingFiles();
+        logInput(`${removedCount} arquivo(s) removido(s).`);
+      });
+    }
+
+    outputNameFilter.addEventListener('input', renderOutputFilesTable);
+    outputTypeFilter.addEventListener('change', renderOutputFilesTable);
+    document.querySelectorAll('[data-available-format]').forEach((checkbox) => {
+      checkbox.addEventListener('change', updateSelectedFilesCount);
+    });
+    deleteAllOutput.addEventListener('click', () =>
+      deleteOutputFiles(getVisibleOutputFiles(), 'os arquivos filtrados'),
+    );
+    downloadAllOutput.addEventListener('click', () => downloadOutputFiles(getVisibleOutputFiles()));
+
     document.getElementById('btn-process-selected').addEventListener('click', async () => {
       try {
         await processSelectedFiles();
@@ -397,6 +551,7 @@
     });
 
     initConfirmDeleteModal();
+    renderPendingFiles();
     refreshOutputFilesTable();
   }
 

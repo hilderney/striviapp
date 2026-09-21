@@ -38,7 +38,7 @@ No modo desktop nada fica na pasta do projeto:
 | --- | --- |
 | Banco, segredos e estado de licença | `%APPDATA%\striviapp-win\app-data\` |
 | Logs, staging e input | `%APPDATA%\striviapp-win\` |
-| Planilhas exportadas | `Documentos\Striviapp\` |
+| Planilhas exportadas | `Documentos\Striviapp\` (xlsx/csv; pdf planned) |
 
 `APP_SECRET_KEY` e `JWT_SECRET` são gerados na primeira execução e guardados
 cifrados via DPAPI (`safeStorage`), então sessões e tokens sobrevivem a reinícios

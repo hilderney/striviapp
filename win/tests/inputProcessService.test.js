@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { processInputFiles } = require('../src/modules/inputProcessService');
+const { processInputFiles, processPdfFile } = require('../src/modules/inputProcessService');
 const { stageInputFiles } = require('../src/modules/stagingUpload');
 const phase1Api = require('../src/api');
 const { createValidPdfBuffer, createTempDir } = require('./helpers/fixtures');
@@ -52,5 +52,53 @@ describe('inputProcessService', () => {
     expect(summary.processed).toBe(2);
     expect(summary.results.some((item) => item.type === 'pdf')).toBe(true);
     expect(summary.results.some((item) => item.type === 'spreadsheet')).toBe(true);
+  });
+
+  test('gera somente os formatos selecionados com sufixo do tipo de saída', async () => {
+    const selectedFormatApi = {
+      extractBatch: jest.fn().mockResolvedValue({
+        results: [{ inputFile: 'doc.pdf', text: 'conteúdo' }],
+        errors: [],
+      }),
+      exportCsv: jest.fn(),
+      exportXlsx: jest.fn().mockResolvedValue({
+        filePath: path.join(outputDir, 'doc_xlsx.xlsx'),
+      }),
+    };
+
+    const result = await processPdfFile(path.join(stagingRoot, 'doc.pdf'), outputDir, selectedFormatApi, {
+      formats: ['xlsx'],
+    });
+
+    expect(result.exports.csv).toEqual([]);
+    expect(result.exports.xlsx).toHaveLength(1);
+    expect(path.basename(result.exports.xlsx[0].filePath)).toBe('doc_xlsx.xlsx');
+    expect(selectedFormatApi.exportCsv).not.toHaveBeenCalled();
+    expect(selectedFormatApi.exportXlsx).toHaveBeenCalledWith(
+      [expect.objectContaining({ inputFile: 'doc.pdf' })],
+      outputDir,
+      expect.objectContaining({ fileName: 'doc_xlsx.xlsx' }),
+    );
+  });
+
+  test('planilha usa sufixo csv e não gera xlsx quando somente CSV foi selecionado', async () => {
+    const staged = await stageInputFiles(
+      [{ name: 'placeholder.pdf', data: (await createValidPdfBuffer('stage')).toString('base64') }],
+      stagingRoot,
+    );
+    const xlsxPath = path.join(staged.inputDir, 'demo.xlsx');
+    await createSampleXlsx(xlsxPath);
+
+    const summary = await processInputFiles(staged.inputDir, ['demo.xlsx'], {
+      outputDir,
+      phase1Api,
+      logsDir: outputDir,
+      formats: ['csv'],
+    });
+
+    const result = summary.results[0];
+    expect(path.basename(result.exports.csv.filePath)).toBe('demo_csv.csv');
+    expect(result.exports.xlsx).toBeNull();
+    await expect(fs.access(result.exports.csv.filePath)).resolves.toBeUndefined();
   });
 });

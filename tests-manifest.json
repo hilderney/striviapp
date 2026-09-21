@@ -2509,6 +2509,15 @@
       "file": "tests/exporter.test.js"
     },
     {
+      "id": "F8-36",
+      "required": [
+        "web",
+        "win"
+      ],
+      "status": "implemented",
+      "file": "tests/exporter.test.js"
+    },
+    {
       "id": "RED-30",
       "required": [
         "web",

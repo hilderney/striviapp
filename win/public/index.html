@@ -69,34 +69,81 @@
       <input type="file" id="file-input" accept=".pdf,.xlsx,.xls,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/octet-stream" multiple hidden style="display: none;">
 
       <div class="actions">
-        <button type="button" id="btn-pick-files">Selecionar arquivos...</button>
+        <button type="button" id="btn-pick-files">Procurar arquivos...</button>
         <button type="button" id="btn-clear-files" class="btn-secondary">Limpar</button>
-        <button type="button" id="btn-process-selected">Processar selecionados</button>
       </div>
 
-      <p id="selection-summary" class="hint">Nenhum arquivo selecionado. Arraste arquivos ou use o botão abaixo.</p>
-
-      <h3>Arquivos carregados</h3>
-      <table id="selected-files-table" class="selected-files-table">
+      <h3>Arquivos carregados <span id="selected-files-count">- Nenhum arquivo selecionado</span></h3>
+      <table id="selected-files-table">
         <thead>
           <tr>
             <th class="col-check"><input type="checkbox" id="select-all-files" checked aria-label="Selecionar todos"></th>
             <th>Arquivo</th>
             <th>Tipo</th>
             <th>Tamanho</th>
-            <th></th>
+            <th class="col-remove">
+              <button type="button" id="btn-remove-all-files" class="btn-link btn-remove-all" aria-label="Remover todos os arquivos carregados" disabled>Remover todos</button>
+            </th>
           </tr>
         </thead>
         <tbody></tbody>
+        <tfoot id="selected-files-footer" class="selected-files-footer" hidden>
+          <tr>
+            <td colspan="5">
+              <div class="selected-files-footer-content">
+                <fieldset class="output-format-selector">
+                  <legend>Tipos de saída</legend>
+                  <label><input type="checkbox" name="output-format" value="xlsx" checked data-available-format> XLSX</label>
+                  <label><input type="checkbox" name="output-format" value="csv" data-available-format> CSV</label>
+                  <label><input type="checkbox" name="output-format" value="pdf" data-available-format> PDF</label>
+                  <label class="format-unavailable"><input type="checkbox" name="output-format" value="doc" disabled> DOC <span>em breve</span></label>
+                  <label class="format-unavailable"><input type="checkbox" name="output-format" value="txt" disabled> TXT <span>em breve</span></label>
+                  <div class="process-files-action">
+                    <button type="button" id="btn-process-selected" disabled>Processar Arquivos</button>
+                  </div>
+                </fieldset>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
       </table>
 
-      <h3>Arquivos gerados</h3>
-      <table id="output-files-table">
-        <thead>
-          <tr><th>Nome</th><th>Ações</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <section id="generated-files-section" class="generated-files-section" hidden>
+        <h3>Arquivos gerados</h3>
+        <div class="output-files-filters">
+          <label>
+            Nome
+            <input type="search" id="output-file-name-filter" placeholder="Filtrar por nome..." aria-label="Filtrar arquivos gerados por nome">
+          </label>
+          <label>
+            Tipo
+            <select id="output-file-type-filter" aria-label="Filtrar arquivos gerados por tipo">
+              <option value="">Todos</option>
+              <option value="xlsx">XLSX</option>
+              <option value="csv">CSV</option>
+              <option value="pdf">PDF</option>
+              <option value="doc">DOC</option>
+              <option value="txt">TXT</option>
+            </select>
+          </label>
+        </div>
+
+        <table id="output-files-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th class="output-actions-header">
+                <div class="file-actions">
+                  <button type="button" id="btn-download-all-output" class="file-action" disabled>Baixar todos</button>
+                  <button type="button" id="btn-delete-all-output" class="file-action file-delete" disabled>Excluir todos</button>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
     </section>
 
     <section id="tab-logs" class="panel">
@@ -154,6 +201,7 @@
       </div>
       <div class="modal-body">
         <form id="totp-password-form" class="hidden" hidden>
+          <input type="text" name="username" autocomplete="username" hidden>
           <p class="hint">
             Seu autenticador atual continua valendo até você ativar o novo.
             Confirme sua senha para ver o QR Code.
