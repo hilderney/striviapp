@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const { PDFDocument, PageSizes, StandardFonts, rgb } = require('pdf-lib');
 
-const PAGE_MARGIN = 24;
+const PAGE_MARGIN = 12;
 const MAIN_COLUMN_WEIGHTS = [55, 50, 50, 120, 62, 120, 85, 35, 68, 60, 68];
 const RESUMO_LAYOUT_WEIGHTS = [80, 52, 14, 12, 16];
 const BLACK = rgb(0, 0, 0);
@@ -22,6 +22,8 @@ const MAIN_ROW_HEIGHT = 16;
 const SUMMARY_ROW_HEIGHT = MAIN_ROW_HEIGHT * 1.5;
 const SUMMARY_SEPARATOR_HEIGHT = MAIN_ROW_HEIGHT * 0.5;
 const RESUMO_HEADER_HEIGHT = MAIN_ROW_HEIGHT;
+const MAIN_FONT_SIZE = 6;
+const RESUMO_FONT_SIZE = 6;
 
 function normalizeText(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -90,12 +92,12 @@ class PdfWriterAdapter {
     document.setCreator('striviapp');
     document.setTitle('Relatório Unimed');
 
-    const landscapeA4 = [PageSizes.A4[1], PageSizes.A4[0]];
+    const portraitA4 = PageSizes.A4;
     let page;
     let cursorY;
 
     const addPage = () => {
-      page = document.addPage(landscapeA4);
+      page = document.addPage(portraitA4);
       cursorY = page.getHeight() - PAGE_MARGIN;
     };
 
@@ -140,10 +142,11 @@ class PdfWriterAdapter {
         bold = false,
         borderWidth = THIN_BORDER,
         outerBorderWidth = 0,
+        outerVerticalBorderWidth = 0,
         fill = WHITE,
         spans = [],
         alignments = {},
-        fontSize = weights === MAIN_COLUMN_WEIGHTS ? 7 : 8,
+        fontSize = weights === MAIN_COLUMN_WEIGHTS ? MAIN_FONT_SIZE : RESUMO_FONT_SIZE,
       } = {},
     ) => {
       ensureSpace(height);
@@ -186,6 +189,20 @@ class PdfWriterAdapter {
           height,
           borderColor: BLACK,
           borderWidth: outerBorderWidth,
+        });
+      }
+      if (outerVerticalBorderWidth > 0) {
+        page.drawLine({
+          start: { x: PAGE_MARGIN, y },
+          end: { x: PAGE_MARGIN, y: y + height },
+          color: BLACK,
+          thickness: outerVerticalBorderWidth,
+        });
+        page.drawLine({
+          start: { x: PAGE_MARGIN + availableWidth, y },
+          end: { x: PAGE_MARGIN + availableWidth, y: y + height },
+          color: BLACK,
+          thickness: outerVerticalBorderWidth,
         });
       }
 
@@ -279,7 +296,7 @@ class PdfWriterAdapter {
           y: blockY,
           width: nameWidth,
           height: blockHeight,
-          size: 9,
+          size: 8,
           bold: true,
           align: 'center',
         });
@@ -303,7 +320,7 @@ class PdfWriterAdapter {
               y: dataY,
               width,
               height,
-              size: 8,
+              size: RESUMO_FONT_SIZE,
               bold,
               align: cellIndex === 0 ? 'left' : 'right',
             });
@@ -332,7 +349,7 @@ class PdfWriterAdapter {
 
     const drawResumo = (resumoRows) => {
       const blocks = buildResumoBlocks(resumoRows);
-      const maxHeight = landscapeA4[1] - PAGE_MARGIN * 2;
+      const maxHeight = portraitA4[1] - PAGE_MARGIN * 2;
       let chunk = [];
       let chunkHeight = 0;
 
@@ -391,29 +408,25 @@ class PdfWriterAdapter {
           });
           break;
         case 'subtotal':
+        case 'grand-total': {
+          const labelColspan = Math.min(
+            Math.max(Number(sheetRow.meta?.labelColspan) || 1, 1),
+            MAIN_COLUMN_WEIGHTS.length,
+          );
           drawRow(sheetRow.cells, {
             bold: true,
             height: SUMMARY_ROW_HEIGHT,
             borderWidth: THIN_BORDER,
             outerBorderWidth: THICK_BORDER,
             fill: TOTAL_FILL,
-            spans: [{ start: 0, end: 5 }],
+            spans: [{ start: 0, end: labelColspan - 1 }],
             alignments: { 0: 'right' },
+            fontSize: sheetRow.type === 'grand-total' ? 7 : MAIN_FONT_SIZE,
           });
           break;
-        case 'grand-total':
-          drawRow(sheetRow.cells, {
-            bold: true,
-            height: SUMMARY_ROW_HEIGHT,
-            borderWidth: THIN_BORDER,
-            outerBorderWidth: THICK_BORDER,
-            fill: TOTAL_FILL,
-            spans: [{ start: 0, end: 5 }],
-            fontSize: 8.5,
-          });
-          break;
+        }
         case 'data':
-          drawRow(sheetRow.cells);
+          drawRow(sheetRow.cells, { outerVerticalBorderWidth: THICK_BORDER });
           break;
         case 'blank':
           ensureSpace(SUMMARY_SEPARATOR_HEIGHT);

@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument, PageSizes } = require('pdf-lib');
 const { importSpreadsheet } = require('../src/modules/spreadsheetImporter');
 const { ExportError } = require('../src/errors');
 const { createTempDir } = require('./helpers/fixtures');
@@ -59,6 +59,9 @@ describe('spreadsheetImporter', () => {
     const bytes = await fs.readFile(result.exports.pdf.filePath);
     const document = await PDFDocument.load(bytes);
     expect(document.getPageCount()).toBeGreaterThan(0);
+    const [firstPage] = document.getPages();
+    expect(firstPage.getWidth()).toBeCloseTo(PageSizes.A4[0], 1);
+    expect(firstPage.getHeight()).toBeCloseTo(PageSizes.A4[1], 1);
   });
 
   test('[F3-31] linha 1 do CSV deve conter prestador derivado', async () => {

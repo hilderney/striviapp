@@ -410,11 +410,11 @@ a { color: var(--accent); }
 }
 
 .file-download {
-  color: var(--muted);
+  color: var(--accent);
 }
 
 .file-download:hover {
-  color: var(--accent);
+  color: var(--accent-hover);
 }
 
 .file-delete {
@@ -751,13 +751,13 @@ a { color: var(--accent); }
 .btn-link {
   background: transparent;
   border: none;
-  color: var(--muted);
+  color: var(--accent);
   padding: 0;
   font-size: 0.85rem;
 }
 
 .btn-link:hover {
-  color: var(--danger);
+  color: var(--accent-hover);
   background: transparent;
 }
 
