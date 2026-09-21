@@ -26,6 +26,11 @@ async function readWorksheet(filePath) {
 }
 
 function borderStyle(cell, side) {
+  const style = cell.border?.[side]?.style;
+  return style === 'thick' ? 'medium' : style;
+}
+
+function rawBorderStyle(cell, side) {
   return cell.border?.[side]?.style;
 }
 
@@ -252,7 +257,7 @@ describe('exporter — Excel (layout Unimed)', () => {
     expect(resumoRateCell.numFmt).toContain('R$');
   });
 
-  test('[F8-36] XLSX deve ter contorno e cabeçalhos 2px e itens da lista 1px', async () => {
+  test('[F8-36] XLSX deve ter contorno e cabeçalhos 3px e itens da lista 1px', async () => {
     const { createExcelWriterAdapter } = require('../src/adapters/excelWriterAdapter');
     const { buildUnimedSpreadsheet } = require('../src/modules/unimedSpreadsheetLayout');
     const filePath = path.join(outputDir, 'borders.xlsx');
@@ -285,6 +290,7 @@ describe('exporter — Excel (layout Unimed)', () => {
     const lastCol = 11;
 
     const preamble = worksheet.getRow(1).getCell(1);
+    expect(rawBorderStyle(preamble, 'top')).toBe('thick');
     expect(borderStyle(preamble, 'top')).toBe('medium');
     expect(borderStyle(preamble, 'left')).toBe('medium');
     expect(borderStyle(preamble, 'bottom')).toBeUndefined();
@@ -293,6 +299,7 @@ describe('exporter — Excel (layout Unimed)', () => {
     expect(borderStyle(secondPreamble, 'bottom')).toBe('medium');
 
     const columnHeader = worksheet.getRow(3).getCell(2);
+    expect(rawBorderStyle(columnHeader, 'top')).toBe('thick');
     expect(borderStyle(columnHeader, 'top')).toBe('medium');
     expect(borderStyle(columnHeader, 'left')).toBe('medium');
     expect(borderStyle(columnHeader, 'right')).toBe('medium');
@@ -323,6 +330,12 @@ describe('exporter — Excel (layout Unimed)', () => {
     expect(borderStyle(subtotalRow.getCell(1), 'bottom')).toBe('medium');
     expect(borderStyle(subtotalRow.getCell(1), 'left')).toBe('medium');
     expect(borderStyle(subtotalRow.getCell(lastCol), 'right')).toBe('medium');
+    expect(subtotalRow.getCell(6).isMerged).toBe(true);
+    expect(subtotalRow.getCell(6).master.address).toBe(`A${subtotalRow.number}`);
+    expect(subtotalRow.height).toBe(22.5);
+    expect(subtotalRow.font.bold).toBe(true);
+    expect(subtotalRow.getCell(1).alignment.horizontal).toBe('right');
+    expect(subtotalRow.getCell(1).alignment.indent).toBe(1);
     expect(borderStyle(subtotalRow.getCell(7), 'left')).toBe('thin');
     expect(borderStyle(subtotalRow.getCell(7), 'right')).toBe('thin');
     expect(borderStyle(subtotalRow.getCell(7), 'top')).toBe('medium');
@@ -331,7 +344,7 @@ describe('exporter — Excel (layout Unimed)', () => {
     worksheet.eachRow((row) => {
       if (
         String(row.getCell(1).value || '') === 'TOTAL GERAL'
-        && row.getCell(1).alignment?.textRotation !== 90
+        && row.getCell(1).font?.size === 13
       ) {
         grandTotalRow = row;
       }
@@ -346,18 +359,23 @@ describe('exporter — Excel (layout Unimed)', () => {
     expect(borderStyle(grandTotalRow.getCell(7), 'top')).toBe('medium');
     expect(borderStyle(grandTotalRow.getCell(lastCol), 'bottom')).toBe('medium');
     expect(borderStyle(grandTotalRow.getCell(lastCol), 'right')).toBe('medium');
+    expect(grandTotalRow.height).toBe(22.5);
+    expect(grandTotalRow.font.bold).toBe(true);
+    expect(grandTotalRow.font.size).toBe(13);
+    expect(worksheet.getRow(grandTotalRow.number - 1).height).toBe(7.5);
 
     let resumoLabelRow = null;
     worksheet.eachRow((row) => {
       if (
         !resumoLabelRow
         && row.getCell(1).value === 'TOTAL GERAL'
-        && row.getCell(1).alignment?.textRotation === 90
+        && row.getCell(1).font?.size === 12
       ) {
         resumoLabelRow = row;
       }
     });
     expect(resumoLabelRow).toBeTruthy();
+    expect(resumoLabelRow.getCell(1).alignment?.textRotation).toBeUndefined();
     expect(borderStyle(resumoLabelRow.getCell(1), 'top')).toBe('medium');
     expect(borderStyle(resumoLabelRow.getCell(1), 'bottom')).toBe('medium');
     expect(borderStyle(resumoLabelRow.getCell(1), 'left')).toBe('medium');
@@ -384,7 +402,8 @@ describe('exporter — Excel (layout Unimed)', () => {
 
     const firstDataRow = worksheet.getRow(resumoLabelRow.number + 1);
     expect(borderStyle(firstDataRow.getCell(9), 'top')).toBe('thin');
-    expect(borderStyle(firstDataRow.getCell(9), 'left')).toBe('thin');
+    expect(borderStyle(firstDataRow.getCell(9), 'left')).toBe('medium');
+    expect(rawBorderStyle(firstDataRow.getCell(11), 'right')).toBe('thick');
 
     let resumoBlockTotal = null;
     worksheet.eachRow((row) => {

@@ -200,6 +200,7 @@ function buildResumoGeralSheetRows(normalizedRows) {
 
   for (const block of executantes) {
     sheetRows.push(...buildExecutanteResumoRows(block));
+    sheetRows.push(buildBlankResumoRow());
   }
 
   sheetRows.push({

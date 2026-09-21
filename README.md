@@ -9,6 +9,12 @@ Dois projetos independentes no mesmo repositório:
 
 Especificações: `FASE1.spec.md` … [`FASE7.spec.md`](FASE7.spec.md) na raiz.
 
+Roadmap e propostas futuras:
+
+- [`TODO.md`](TODO.md)
+- [Migração de autenticação para Firebase](.docs/specs/06-firebase-auth-migration.spec.md)
+- [Atualização automática por GitHub Releases](.docs/specs/07-github-auto-update.spec.md)
+
 ## Desenvolvimento local
 
 Na raiz do repositório:

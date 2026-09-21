@@ -165,6 +165,14 @@ win/dist/
 
 # SDD specs (source of truth local, nao versionado)
 .docs/
+!.docs/
+.docs/*
+!.docs/firebase-auth-architecture.md
+!.docs/github-update-operations.md
+!.docs/specs/
+.docs/specs/*
+!.docs/specs/06-firebase-auth-migration.spec.md
+!.docs/specs/07-github-auto-update.spec.md
 
 
 #pdfs files

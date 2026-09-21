@@ -104,6 +104,11 @@ describe('unimedResumoGeral', () => {
     expect(content).toContain('TOTAL - BOTO');
     expect(content).toContain('TOTAL - CORUJA');
     expect(content).toContain('T O T A L  G E R A L');
+    expect(sheetRows.filter((row) => row.type === 'resumo-blank')).toHaveLength(2);
+    expect(
+      sheetRows.findIndex((row) => row.type === 'resumo-grand-start') -
+        sheetRows.findLastIndex((row) => row.type === 'resumo-blank'),
+    ).toBe(1);
     expect(sheetRows.some((row) => row.type === 'resumo-grand-total')).toBe(true);
     expect(sheetRows.find((row) => row.type === 'resumo-grand-total').cells[0]).toBe('TOTAL');
   });

@@ -17,7 +17,7 @@ const UNIMED_REPORT_HEADERS = [
 ];
 
 const COLUMN_COUNT = UNIMED_REPORT_HEADERS.length;
-const SUBTOTAL_LABEL_COLSPAN = 5;
+const SUBTOTAL_LABEL_COLSPAN = 6;
 
 const SERVICE_LABELS = {
   '50000470': 'Consulta/Terapia',

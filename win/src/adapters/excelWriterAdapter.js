@@ -28,9 +28,14 @@ const RESUMO_GRAND_COLOR_INDEX = 3;
 
 const FROZEN_HEADER_ROWS = 3;
 const COLUMN_WIDTHS = [14, 12, 12, 28, 14, 28, 16, 8, 14, 12, 14];
+const NORMAL_ROW_HEIGHT = 15;
+const SUMMARY_ROW_HEIGHT = NORMAL_ROW_HEIGHT * 1.5;
+const SUMMARY_SEPARATOR_ROW_HEIGHT = NORMAL_ROW_HEIGHT * 0.5;
+const NORMAL_FONT_SIZE = 11;
+const GRAND_TOTAL_FONT_SIZE = Math.round(NORMAL_FONT_SIZE * 1.2);
 
 const BORDER_BLACK = { argb: 'FF000000' };
-const BORDER_2PX = { style: 'medium', color: BORDER_BLACK };
+const BORDER_3PX = { style: 'thick', color: BORDER_BLACK };
 const BORDER_1PX = { style: 'thin', color: BORDER_BLACK };
 
 function boxBorder(edge) {
@@ -83,7 +88,7 @@ function markBold(cell) {
 }
 
 function markTopBorder(cell) {
-  cell.border = { top: { style: 'medium' } };
+  cell.border = { top: BORDER_3PX };
 }
 
 /**
@@ -171,7 +176,8 @@ class UnimedReportRenderer {
   }
 
   renderBlank() {
-    this.addRow(emptyCells(COLUMN_COUNT));
+    const row = this.addRow(emptyCells(COLUMN_COUNT));
+    row.height = SUMMARY_SEPARATOR_ROW_HEIGHT;
   }
 
   renderResumoSeparator() {
@@ -264,8 +270,17 @@ class UnimedReportRenderer {
 
     if (['subtotal', 'grand-total'].includes(sheetRow.type)) {
       row.font = { bold: true };
+      row.height = SUMMARY_ROW_HEIGHT;
       const labelColspan = sheetRow.meta?.labelColspan || SUBTOTAL_LABEL_COLSPAN;
       this.worksheet.mergeCells(this.rowIndex, 1, this.rowIndex, labelColspan);
+
+      if (sheetRow.type === 'subtotal') {
+        row.getCell(1).alignment = { horizontal: 'right', vertical: 'middle', indent: 1 };
+      }
+
+      if (sheetRow.type === 'grand-total') {
+        row.font = { bold: true, size: GRAND_TOTAL_FONT_SIZE };
+      }
     }
   }
 
@@ -315,7 +330,7 @@ class UnimedReportRenderer {
     const label = this.worksheet.getCell(resumoSectionStart, 1);
     label.value = 'TOTAL GERAL';
     label.font = { bold: true, size: 12 };
-    label.alignment = { vertical: 'middle', horizontal: 'center', textRotation: 90 };
+    label.alignment = { vertical: 'middle', horizontal: 'center' };
   }
 
   freezeHeader() {
@@ -332,10 +347,10 @@ class UnimedReportRenderer {
       return;
     }
 
-    this.applyPreambleOutline(BORDER_2PX);
+    this.applyPreambleOutline(BORDER_3PX);
 
     for (const rowIndex of this.columnHeaderRowIndexes) {
-      this.applyRowCellBoxes(rowIndex, BORDER_2PX);
+      this.applyRowCellBoxes(rowIndex, BORDER_3PX);
     }
 
     for (const rowIndex of this.listItemRowIndexes) {
@@ -344,14 +359,14 @@ class UnimedReportRenderer {
 
     for (const rowIndex of this.listTotalRowIndexes) {
       this.applyRowCellBoxes(rowIndex, BORDER_1PX);
-      this.applyMergedRowOutline(rowIndex, BORDER_2PX);
+      this.applyMergedRowOutline(rowIndex, BORDER_3PX);
     }
 
     const listEndRow =
       this.listTotalRowIndexes.length > 0
         ? this.listTotalRowIndexes[this.listTotalRowIndexes.length - 1]
         : lastRow;
-    this.applyDocumentOutline(listEndRow, BORDER_2PX);
+    this.applyDocumentOutline(listEndRow, BORDER_3PX);
 
     for (const rowIndex of this.resumoSeparatorRowIndexes) {
       this.clearRowBorders(rowIndex);
@@ -485,16 +500,16 @@ class UnimedReportRenderer {
       return;
     }
 
-    this.applyRectOutline(resumoSectionStart, 1, resumoSectionEnd, RESUMO_LEFT_COLSPAN, BORDER_2PX);
-    setBorderSides(this.worksheet.getCell(resumoSectionStart, 1), boxBorder(BORDER_2PX));
+    this.applyRectOutline(resumoSectionStart, 1, resumoSectionEnd, RESUMO_LEFT_COLSPAN, BORDER_3PX);
+    setBorderSides(this.worksheet.getCell(resumoSectionStart, 1), boxBorder(BORDER_3PX));
 
     const nameEndCol = RESUMO_NAME_COL + RESUMO_NAME_COLSPAN - 1;
     const dataStart = RESUMO_DATA_COL;
     const dataEnd = RESUMO_TOTAL_COL;
 
     for (const block of this.resumoBlocks) {
-      this.applyRectOutline(block.startRow, RESUMO_NAME_COL, block.endRow, nameEndCol, BORDER_2PX);
-      setBorderSides(this.worksheet.getCell(block.startRow, RESUMO_NAME_COL), boxBorder(BORDER_2PX));
+      this.applyRectOutline(block.startRow, RESUMO_NAME_COL, block.endRow, nameEndCol, BORDER_3PX);
+      setBorderSides(this.worksheet.getCell(block.startRow, RESUMO_NAME_COL), boxBorder(BORDER_3PX));
 
       const dataRows = [block.headerRow, ...block.dataRows];
       if (block.totalRow) {
@@ -504,9 +519,9 @@ class UnimedReportRenderer {
         this.applyColRangeBoxes(rowIndex, dataStart, dataEnd, BORDER_1PX);
       }
 
-      this.applyColRangeOutline(block.headerRow, dataStart, dataEnd, BORDER_2PX);
+      this.applyRectOutline(block.startRow, dataStart, block.endRow, dataEnd, BORDER_3PX);
       if (block.totalRow) {
-        this.applyColRangeOutline(block.totalRow, dataStart, dataEnd, BORDER_2PX);
+        this.applyColRangeOutline(block.totalRow, dataStart, dataEnd, BORDER_3PX);
       }
     }
   }
