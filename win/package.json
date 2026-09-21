@@ -1,6 +1,7 @@
 {
   "name": "striviapp-win",
   "version": "2.0.0",
+  "author": "Hilderney Zapf",
   "description": "Striviapp — Windows desktop (Electron) with remote licensing",
   "main": "desktop/main.js",
   "scripts": {

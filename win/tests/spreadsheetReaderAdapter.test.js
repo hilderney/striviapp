@@ -8,6 +8,7 @@ const {
   normalizeHeader,
   detectDelimiter,
   parseDelimitedContent,
+  formatCellValue,
 } = require('../src/adapters/spreadsheetReaderAdapter');
 const { SpreadsheetError, ValidationError, FileReaderError } = require('../src/errors');
 const { createTempDir } = require('./helpers/fixtures');
@@ -139,6 +140,53 @@ describe('spreadsheetReaderAdapter — xlsx', () => {
     const result = await readSpreadsheet(filePath);
     expect(result.headers).toContain('requisicao');
     expect(result.rows[0].protocolo).toBe('1790011');
+  });
+
+  test('deve formatar células Date de Atendimento como dd/MM/yyyy', async () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('demo');
+    sheet.addRow([
+      'Requisição',
+      'Protocolo',
+      'Guia',
+      'Beneficiário',
+      'Atendimento',
+      'Local exec',
+      'Executante',
+      'Vl Bruto',
+      'Vl Glosa',
+      'Qt Item',
+      'Vl Pago',
+      'Evento',
+      'Descrição',
+    ]);
+    const row = sheet.addRow([
+      '604900030',
+      '1790011',
+      '7990008',
+      'IRARA',
+      new Date(Date.UTC(2026, 5, 9)),
+      'CLINICA ARARA AZUL',
+      'BOTO',
+      '45,54',
+      '0',
+      '1',
+      '45,54',
+      '50000470',
+      'PROC',
+    ]);
+    row.getCell(5).numFmt = 'dd/mm/yyyy';
+    const filePath = path.join(tempDir, 'date-cell.xlsx');
+    await workbook.xlsx.writeFile(filePath);
+
+    const result = await readSpreadsheet(filePath);
+    expect(result.rows[0].atendimento).toBe('09/06/2026');
+    expect(result.rows[0].atendimento).not.toMatch(/GMT|Horário/);
+  });
+
+  test('formatCellValue converte Date UTC para dd/MM/yyyy', () => {
+    expect(formatCellValue(new Date(Date.UTC(2026, 5, 8)))).toBe('08/06/2026');
+    expect(formatCellValue('08/06/2026')).toBe('08/06/2026');
   });
 
   test('[F3-10] deve mapear células vazias como string vazia', async () => {

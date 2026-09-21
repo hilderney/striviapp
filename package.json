@@ -2,6 +2,7 @@
   "name": "striviapp-monorepo",
   "private": true,
   "version": "2.0.0",
+  "author": "Hilderney Zapf",
   "description": "Monorepo: web/ (Fases 1–6) and win/ (Fase 7 desktop)",
   "scripts": {
     "install:all": "npm --prefix web install && npm --prefix win install",
@@ -15,6 +16,7 @@
     "start:web": "npm --prefix web run start:web",
     "start:desktop": "npm --prefix win run start:desktop",
     "build:win": "npm --prefix win run dist:win",
+    "pack:win": "npm --prefix win run pack:win",
     "build": "npm run test && npm run build:win"
   },
   "license": "MIT",

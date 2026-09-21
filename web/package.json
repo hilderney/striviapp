@@ -1,6 +1,7 @@
 {
   "name": "striviapp-web",
   "version": "0.1.0",
+  "author": "Hilderney Zapf",
   "description": "PDF text extraction, export pipeline and LLM integration (web / Fases 1–6)",
   "main": "src/index.js",
   "scripts": {

@@ -64,6 +64,43 @@ function isRowEmpty(values) {
   return values.every((value) => String(value || '').trim() === '');
 }
 
+function formatExcelDate(value) {
+  if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+    return null;
+  }
+
+  // Excel date cells are calendar dates; ExcelJS typically returns UTC midnight.
+  const day = String(value.getUTCDate()).padStart(2, '0');
+  const month = String(value.getUTCMonth() + 1).padStart(2, '0');
+  const year = value.getUTCFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function formatCellValue(value) {
+  if (value == null) {
+    return '';
+  }
+
+  const asDate = formatExcelDate(value);
+  if (asDate) {
+    return asDate;
+  }
+
+  if (typeof value === 'object') {
+    if (typeof value.text === 'string') {
+      return value.text;
+    }
+    if (Array.isArray(value.richText)) {
+      return value.richText.map((part) => part.text || '').join('');
+    }
+    if (Object.prototype.hasOwnProperty.call(value, 'result')) {
+      return formatCellValue(value.result);
+    }
+  }
+
+  return String(value);
+}
+
 function buildRowsFromMatrix(headers, matrixRows) {
   return matrixRows.map((cells) => {
     const row = {};
@@ -131,12 +168,7 @@ async function readXlsxFile(filePath) {
 
   const matrix = [];
   sheet.eachRow((row) => {
-    const cells = row.values.slice(1).map((value) => {
-      if (value == null) {
-        return '';
-      }
-      return String(value);
-    });
+    const cells = row.values.slice(1).map((value) => formatCellValue(value));
     matrix.push(cells);
   });
 
@@ -245,6 +277,8 @@ module.exports = {
   normalizeHeader,
   detectDelimiter,
   parseDelimitedContent,
+  formatCellValue,
+  formatExcelDate,
   SUPPORTED_EXTENSIONS,
   REQUIRED_HEADER_KEYS,
 };
